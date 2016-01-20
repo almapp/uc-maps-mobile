@@ -1,11 +1,36 @@
 {
   "name": "uc-maps-mobile",
+  "description": "Mobile app written with React Native",
+  "homepage": "https://github.com/almapp/uc-maps-mobile#readme",
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "android": "adb reverse tcp:8081 tcp:8081 && node node_modules/react-native/local-cli/cli.js run-android"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/almapp/uc-maps-mobile.git"
+  },
+  "keywords": [
+    "uc",
+    "puc",
+    "maps"
+  ],
+  "author": {
+    "name": "Patricio López Juri",
+    "email": "patricio@lopezjuri.com",
+    "url": "https://lopezjuri.com"
+  },
+  "contributors": [],
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/almapp/uc-maps-mobile/issues"
   },
   "dependencies": {
     "react-native": "^0.18.1"
+  },
+  "devDependencies": {
+
   }
 }
