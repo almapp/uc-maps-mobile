@@ -14,36 +14,22 @@ export default class MapsView extends Component {
 
     this.state = {
       initialRegion: {
-        latitude: -33.45991114168568,
-        longitude: -70.63080018531736,
-        latitudeDelta: 0.2559724072906775,
-        longitudeDelta: 0.1791658495423434,
+        longitudeDelta: 0.09766039646630986,
+        latitude: -33.45093681992992,
+        longitude: -70.61507084839033,
+        latitudeDelta: 0.139540891650725
       },
-      campuses: [{
-        name: "San Joaquín",
-        address: "Vicuña Mackenna 4686, Macul",
-        display: true,
-        coordinates: {
-          latitude: -33.498116,
-          longitude: -70.611511,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        },
-      }, {
-        name: "Casa Central",
-        address: "Almirante Barroso 10, Santiago",
-        display: true,
-        coordinates: {
-          latitude: -33.441513,
-          longitude: -70.640508,
-          latitudeDelta: 0.003,
-          longitudeDelta: 0.003,
-        }
-      }],
+      campuses: [],
     }
+
+    fetch('http://localhost:3000/api/v1/campuses')
+      .then(response => response.json())
+      .then(response => this.setState({ campuses: response }))
+      .done()
   }
 
   render() {
+    console.log(this.state.campuses)
     return (
       <View style={styles.container}>
         <MapView
@@ -54,9 +40,11 @@ export default class MapsView extends Component {
             mapType="hybrid"
             showsCompass={true}
             showsPointsOfInterest={false}
+            showsTraffic={false}
+            onRegionChangeComplete={this.onRegionChangeComplete}
           >
 
-          {this.state.campuses.filter(campus => campus.display).map((campus, i) => (
+          {this.state.campuses.map((campus, i) => (
             <CampusMarker key={i} campus={campus} onSelect={this.onSelect.bind(this)}/>
           ))}
 
@@ -80,6 +68,10 @@ export default class MapsView extends Component {
 
   onSelect(campus) {
     this.goTo(campus.coordinates)
+  }
+
+  onRegionChangeComplete(region) {
+    console.log(region)
   }
 }
 

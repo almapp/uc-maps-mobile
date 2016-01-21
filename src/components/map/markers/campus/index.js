@@ -8,9 +8,24 @@ export default class CampusMarker extends Component {
 
   render() {
     const campus = this.props.campus
+    const geoJSON = campus.location
+
+    var coordinates = {
+      latitude: 0,
+      longitude: 0,
+    }
+    if (geoJSON.type === 'Polygon') {
+      coordinates = {
+        latitude: geoJSON.coordinates[0][0][1],
+        longitude: geoJSON.coordinates[0][0][0],
+      }
+    }
+
+    const address = campus.address.split(',')[0]
+
     return (
       <MapView.Marker
-        coordinate={campus.coordinates}
+        coordinate={coordinates}
         onSelect={this.func.bind(this)} >
 
         <View style={styles.container}>
@@ -20,7 +35,7 @@ export default class CampusMarker extends Component {
             </Text>
             <Icon name="chevron-right" style={styles.disclosure} />
             <Text style={styles.description}>
-              {campus.address}
+              {address}
             </Text>
           </View>
           <View style={styles.arrowBorder} />
