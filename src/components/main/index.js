@@ -1,10 +1,17 @@
-import React, {AppRegistry, Component, Navigator, StyleSheet, Text, View} from 'react-native'
+import React, {StatusBarIOS, Component, Navigator, StyleSheet, Platform} from 'react-native'
 import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
 
 import InformationView from '../information'
 import MapsView from '../map'
 
 export default class Main extends Component {
+  constructor(props) {
+    super(props)
+    if (Platform.OS === 'ios') {
+      StatusBarIOS.setStyle('light-content')
+    }
+  }
+
   render() {
     return (
       <Router hideNavBar={true}>
