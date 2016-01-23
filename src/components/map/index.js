@@ -2,6 +2,7 @@ import React, { StyleSheet, Text, View, Component } from 'react-native'
 
 import MapView from 'react-native-maps'
 import Tabs from 'react-native-tabs'
+import { Actions } from 'react-native-router-flux'
 
 import CampusMarker from './markers/campus'
 
@@ -19,17 +20,12 @@ export default class MapsView extends Component {
         longitude: -70.61507084839033,
         latitudeDelta: 0.139540891650725
       },
-      campuses: [],
+      campus: this.props.campus,
     }
 
-    fetch('http://localhost:3000/api/v1/campuses')
-      .then(response => response.json())
-      .then(response => this.setState({ campuses: response }))
-      .done()
   }
 
   render() {
-    console.log(this.state.campuses)
     return (
       <View style={styles.container}>
         <MapView
@@ -44,9 +40,7 @@ export default class MapsView extends Component {
             onRegionChangeComplete={this.onRegionChangeComplete}
           >
 
-          {this.state.campuses.map((campus, i) => (
-            <CampusMarker key={i} campus={campus} onSelect={this.onSelect.bind(this)}/>
-          ))}
+          <CampusMarker campus={this.state.campus} onSelect={this.onSelect.bind(this)}/>
 
         </MapView>
         <View style={styles.header}>
@@ -56,18 +50,16 @@ export default class MapsView extends Component {
     )
   }
 
+  goBack() {
+    Actions.pop()
+  }
+
   goTo(coordinates) {
-    this.setState({
-      campuses: this.state.campuses.map(campus => {
-        campus.display = false
-        return campus
-      }),
-    })
     this.refs.map.animateToRegion(coordinates)
   }
 
-  onSelect(campus) {
-    this.goTo(campus.coordinates)
+  onSelect() {
+    // this.goTo(this.state.campus.location.coordinates[0][0])
   }
 
   onRegionChangeComplete(region) {

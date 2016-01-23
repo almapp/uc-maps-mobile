@@ -3,12 +3,13 @@ import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flu
 
 import InformationView from '../information'
 import MapsView from '../map'
+import CampusList from '../campus-list'
 
 export default class Main extends Component {
   constructor(props) {
     super(props)
     if (Platform.OS === 'ios') {
-      StatusBarIOS.setStyle('light-content')
+      // StatusBarIOS.setStyle('light-content')
     }
   }
 
@@ -19,7 +20,8 @@ export default class Main extends Component {
         <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight}/>
         <Schema name="withoutAnimation"/>
 
-        <Route name="map" schema="default" title="Mapa" component={MapsView} />
+        <Route name="maps" schema="default" title="Mapa" component={MapsView} />
+        <Route name="campuses" schema="default" title="Selecciona Campus" component={CampusList} initial={true} hideNavBar={false} />
       </Router>
     )
   }
