@@ -1,6 +1,12 @@
+import gju from 'geojson-utils'
+
 export default class Campus {
   constructor() {
 
+  }
+
+  get center() {
+    return gju.centroid(this.location)
   }
 
   static fromJSON(json) {
