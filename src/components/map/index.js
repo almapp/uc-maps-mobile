@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     right: margin,
-    height: 46,
+    height: 44,
     top: 20 + margin,
     left: margin,
     backgroundColor: 'white',
@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
   backButton: {
     // textAlign: 'center', is not working
     paddingLeft: 15,
-    height: 46,
-    width: 46,
+    height: 44,
+    width: 44,
     borderRadius: 0,
   },
   search: {
