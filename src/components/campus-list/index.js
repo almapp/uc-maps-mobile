@@ -1,4 +1,4 @@
-import React, {View, Text, Component, StyleSheet} from 'react-native'
+import React, { View, Text, Component, StyleSheet, Platform, StatusBarIOS } from 'react-native'
 import {Actions} from 'react-native-router-flux'
 import Parallax from 'react-native-parallax'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -8,6 +8,11 @@ import Campus from '../../models/campus'
 export default class CampusList extends Component {
   constructor(props) {
     super(props)
+
+    if (Platform.OS === 'ios') {
+      StatusBarIOS.setStyle('default', true)
+    }
+
     this.state = {
       campuses: [],
     }

@@ -30,6 +30,7 @@
   "dependencies": {
     "geojson-utils": "^1.1.0",
     "react-native": "^0.18.1",
+    "react-native-action-button": "^1.1.1",
     "react-native-maps": "github:lelandrichardson/react-native-maps",
     "react-native-parallax": "^0.2.2",
     "react-native-router-flux": "^2.0.9",

@@ -8,9 +8,6 @@ import CampusList from '../campus-list'
 export default class Main extends Component {
   constructor(props) {
     super(props)
-    if (Platform.OS === 'ios') {
-      // StatusBarIOS.setStyle('light-content')
-    }
   }
 
   render() {
