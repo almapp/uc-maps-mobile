@@ -29,7 +29,7 @@ export default class Campus {
 
   static all() {
     return fetch('http://localhost:3000/api/v1/campuses')
-    .then(response => response.json())
-    .then(jsons => jsons.map(Campus.fromJSON))
+      .then(response => response.json())
+      .then(jsons => jsons.map(Campus.fromJSON))
   }
 }
