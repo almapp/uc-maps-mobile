@@ -3,7 +3,7 @@ import React, { StyleSheet, Text, View, Component, Dimensions, Platform, StatusB
 import MapView from 'react-native-maps'
 import Tabs from 'react-native-tabs'
 import Icon from 'react-native-vector-icons/Ionicons'
-import ActionButton from 'react-native-action-button';
+import Swiper from 'react-native-swiper'
 import { Actions } from 'react-native-router-flux'
 
 import CampusMarker from './markers/campus'
@@ -67,18 +67,19 @@ export default class MapsView extends Component {
           </View>
         </View>
 
-        <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item buttonColor='#9b59b6' title="New Task" >
-            <Icon name="android-create" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#3498db' title="Notifications" >
-            <Icon name="android-notifications-none" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" >
-            <Icon name="android-done-all" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
-
+        <View style={styles.footer}>
+          <Swiper style={styles.swiper} height={100} showsButtons={true} showsPagination={false}>
+            <View style={styles.slide}>
+              <Text style={styles.text}>Hello Swiper</Text>
+            </View>
+            <View style={styles.slide}>
+              <Text style={styles.text}>Beautiful</Text>
+            </View>
+            <View style={styles.slide}>
+              <Text style={styles.text}>And simple</Text>
+            </View>
+          </Swiper>
+        </View>
       </View>
     )
   }
@@ -138,9 +139,18 @@ const styles = StyleSheet.create({
   search: {
     marginLeft: 8,
   },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
+  footer: {
+    backgroundColor: 'white',
+    height: 100,
+    alignSelf: 'flex-end',
+  },
+  swiper: {
+
+  },
+  slide: {
+    flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: 'white',
   },
 })
