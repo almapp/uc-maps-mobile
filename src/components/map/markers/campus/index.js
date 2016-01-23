@@ -1,6 +1,5 @@
 import React, { StyleSheet, Text, View, Component } from 'react-native'
 
-import autobind from 'autobind-decorator'
 import MapView from 'react-native-maps'
 import Icon from 'react-native-vector-icons/Ionicons'
 
