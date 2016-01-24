@@ -3,7 +3,7 @@ import {Actions} from 'react-native-router-flux'
 import Parallax from 'react-native-parallax'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-import Campus from '../../models/campus'
+import { fetchCampuses } from '../../models'
 
 export default class CampusList extends Component {
   constructor(props) {
@@ -16,13 +16,12 @@ export default class CampusList extends Component {
     this.state = {
       campuses: [],
     }
-    this.fetchCampuses();
+    this.fetch();
   }
 
-  fetchCampuses() {
-    return Campus.all()
-    .then(campuses => this.setState({ campuses: campuses }))
-    .done()
+  fetch() {
+    return fetchCampuses()
+      .then(campuses => this.setState({ campuses: campuses }))
   }
 
   getImage(campus) {

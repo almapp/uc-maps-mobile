@@ -1,0 +1,62 @@
+import gju from 'geojson-utils'
+
+import { URL } from './settings'
+
+export class Entity {
+  get center() {
+    if (this.location.type === 'Point') {
+      return this.location
+    } else {
+      return gju.centroid(this.location)
+    }
+  }
+
+  get polygon() {
+    if (this.location.type !== 'Polygon') return null
+    if (this.location.coordinates.length < 1) return null
+
+    const coordinates = this.location.coordinates[0]
+    return coordinates.map(coord => {
+      return {
+        latitude: coord[1],
+        longitude: coord[0],
+      }
+    })
+  }
+
+  static fromJSON(json) {
+    // TODO: improve
+    const entity = new Entity()
+    entity["_id"] = json["_id"]
+    entity["identifier"] = json["identifier"]
+    entity["campus"] = json["campus"]
+    entity["name"] = json["name"]
+    entity["shortName"] = json["shortName"]
+    entity["address"] = json["address"]
+    entity["location"] = json["location"]
+    entity["information"] = json["information"]
+    entity["parent"] = json["parent"]
+    entity["categories"] = json["categories"]
+    entity["ancestors"] = json["ancestors"]
+    entity["contact"] = json["contact"]
+    return entity
+  }
+}
+
+export function fetchCampuses() {
+  return fetch(`${URL}/campuses`)
+    .then(response => response.json())
+    .then(jsons => jsons.map(Entity.fromJSON))
+}
+
+export function fetchFaculties(campus) {
+  return fetch(`${URL}/campuses/${campus.identifier}/faculties`)
+    .then(response => response.json())
+    .then(jsons => jsons.map(Entity.fromJSON))
+}
+
+export function fetchBuildings(campus) {
+  return fetch(`${URL}/campuses/${campus.identifier}/buildings`)
+    .then(response => response.json())
+    .then(jsons => jsons.map(Entity.fromJSON))
+}

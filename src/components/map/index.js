@@ -4,14 +4,20 @@ import MapView from 'react-native-maps'
 import Tabs from 'react-native-tabs'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Swiper from 'react-native-swiper'
+import Button from 'react-native-button'
+import { RadioButtons } from 'react-native-radio-buttons'
 import { Actions } from 'react-native-router-flux'
 
 import CampusMarker from './markers/campus'
+import { fetchFaculties, fetchBuildings } from '../../models'
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0091;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+const FLAT_SAND = 'rgba(235, 216, 159, 0.6'
+const FLAT_BLUE = 'rgba(49, 130, 217, 0.6'
 
 const DEFAULT_REGION = {
   longitudeDelta: 0.09766039646630986,
@@ -37,11 +43,47 @@ export default class MapsView extends Component {
         latitude: place.coordinates[1],
       },
       campus: this.props.campus,
+      sectors: [],
+      selected: 0,
     }
+    this.fetch()
+  }
 
+  fetch() {
+    return Promise.all([
+      fetchFaculties(this.props.campus),
+      fetchBuildings(this.props.campus),
+    ])
+    .then(results => results[0].concat(results[1]))
+    .then(sectors => this.setState({ sectors: sectors, selected: 0 }))
   }
 
   render() {
+    const swipers = this.state.sectors ? (
+      <Swiper ref="swiper" style={styles.swiper} height={85} index={this.state.selected} showsButtons={true} showsPagination={false} onMomentumScrollEnd={this.selectSelector.bind(this)}>
+        {this.state.sectors.map((sector, i) => (
+          <View key={i} style={styles.slide}>
+            <Text style={styles.footerTitle} numberOfLines={2}>{sector.shortName}</Text>
+            <Text style={styles.footerSubTitle}>a 10 minutos</Text>
+          </View>
+        ))}
+      </Swiper>
+    ) : null
+
+    const polygons = []
+    this.state.sectors.forEach((sector, i) => {
+      const polygon = sector.polygon
+      if (polygon) {
+        polygons.push((<MapView.Polygon
+          key={i}
+          coordinates={polygon}
+          fillColor={this.state.selected === i ? FLAT_SAND : FLAT_SAND}
+          strokeColor="rgba(0,0,0,0.5"
+          strokeWidth={1}
+          />))
+      }
+    })
+
     return (
       <View style={styles.container}>
 
@@ -57,6 +99,8 @@ export default class MapsView extends Component {
             onRegionChangeComplete={this.onRegionChangeComplete}
           >
 
+          {polygons}
+
         </MapView>
         <View style={styles.header}>
           <Icon.Button borderRadius={0} name="chevron-left" style={styles.backButton} onPress={this.goBack} />
@@ -68,18 +112,14 @@ export default class MapsView extends Component {
         </View>
 
         <View style={styles.footer}>
-          <Swiper style={styles.swiper} height={100} showsButtons={true} showsPagination={false}>
-            <View style={styles.slide}>
-              <Text style={styles.text}>Hello Swiper</Text>
-            </View>
-            <View style={styles.slide}>
-              <Text style={styles.text}>Beautiful</Text>
-            </View>
-            <View style={styles.slide}>
-              <Text style={styles.text}>And simple</Text>
-            </View>
-          </Swiper>
+          {swipers}
         </View>
+
+        <View style={styles.selector}>
+          <Button style={styles.details}>Detalles</Button>
+          <Button style={styles.classrooms}>Ver Salas</Button>
+        </View>
+
       </View>
     )
   }
@@ -89,11 +129,31 @@ export default class MapsView extends Component {
   }
 
   goTo(coordinates) {
-    this.refs.map.animateToRegion(coordinates)
+    this.refs.maps.animateToRegion(coordinates)
+  }
+
+  // GeoJSON point
+  goToPoint(point) {
+    this.goTo({
+      latitude: point.coordinates[1] ||  this.state.initialRegion.latitude,
+      longitude: point.coordinates[0] || this.state.initialRegion.longitude,
+    })
+  }
+
+  scrollTo(index) {
+    this.refs.swiper.scrollTo(index)
   }
 
   onSelect() {
     // this.goTo(this.state.campus.location.coordinates[0][0])
+  }
+
+  selectSelector(e, state, context) {
+    const center = this.state.sectors[state.index].center
+    if (center) {
+      this.goToPoint(center)
+    }
+    // this.setState({ selected: state.index })
   }
 
   onRegionChangeComplete(region) {
@@ -141,8 +201,15 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: 'white',
-    height: 100,
+    height: 85,
     alignSelf: 'flex-end',
+    shadowOffset: {
+      width: 2,
+      height: -3,
+    },
+    shadowRadius: 2,
+    shadowColor: 'black',
+    shadowOpacity: 0.8,
   },
   swiper: {
 
@@ -152,5 +219,38 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     backgroundColor: 'white',
+  },
+  footerTitle: {
+    fontSize: 19,
+    fontWeight: '500',
+    marginLeft: 40,
+    marginTop: 10,
+    marginRight: 40,
+  },
+  footerSubTitle: {
+    marginLeft: 40,
+    marginTop: 3,
+    fontWeight: '200',
+  },
+  footerAction: {
+    position: 'absolute',
+    bottom: 8,
+    right: 40,
+    width: 100,
+    height: 22,
+  },
+  selector: {
+    // backgroundColor: 'red',
+    height: 30,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  details: {
+    paddingLeft: 25,
+  },
+  classrooms: {
+    paddingRight: 25,
   },
 })
