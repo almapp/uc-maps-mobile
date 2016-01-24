@@ -16,8 +16,9 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0091;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const FLAT_SAND = 'rgba(235, 216, 159, 0.6'
-const FLAT_BLUE = 'rgba(49, 130, 217, 0.6'
+const FLAT_SAND = 'rgba(235, 216, 159, 0.6)'
+const FLAT_BLUE = 'rgba(49, 130, 217, 0.6)'
+const FLAT_PURPLE = 'rgba(71, 47, 151, 1.0)'
 
 const DEFAULT_REGION = {
   longitudeDelta: 0.09766039646630986,
@@ -111,6 +112,14 @@ export default class MapsView extends Component {
           </View>
         </View>
 
+        <View style={styles.tabView}>
+          <Tabs selected="second" style={styles.tabs} iconStyle={{ height: TAB_HEIGHT }}>
+            {['man', 'woman', 'fork', 'trash-a', 'card', 'printer', 'ios-bookmarks', 'android-bicycle'].map((icon, i) => (
+              <Icon key={i} color="white" size={25} name={icon} style={styles.tab} />
+            ))}
+          </Tabs>
+        </View>
+
         <View style={styles.footer}>
           {swipers}
         </View>
@@ -162,6 +171,7 @@ export default class MapsView extends Component {
 }
 
 const margin = 10
+const TAB_HEIGHT = 39
 
 const styles = StyleSheet.create({
   container: {
@@ -186,6 +196,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  tabView: {
+    // backgroundColor: 'rgba(49, 130, 217, 1.0)', //'rgba(0,0,0,0)',
+    backgroundColor: 'rgba(39, 105, 176, 1.0)', //'rgba(0,0,0,0)',
+    height: TAB_HEIGHT,
+    // position: 'absolute',
+    // left: 0,
+    // right: 0,
+    // bottom: 125,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: -5,
+    // },
+    // shadowRadius: 2,
+    // shadowColor: 'black',
+    // shadowOpacity: 0.8,
+  },
+  tabs: {
+    // backgroundColor: 'rgba(49, 130, 217, 1.0)', //'rgba(0,0,0,0)',
+    backgroundColor: 'rgba(39, 105, 176, 1.0)', //'rgba(0,0,0,0)',
+    height: TAB_HEIGHT,
+    paddingBottom: 1,
+  },
+  tab: {
+    // backgroundColor: FLAT_PURPLE, //'rgba(0,0,0,0)',
+  },
   maps: {
     flex: 1,
   },
@@ -204,12 +239,13 @@ const styles = StyleSheet.create({
     height: 85,
     alignSelf: 'flex-end',
     shadowOffset: {
-      width: 2,
+      width: 0,
       height: -3,
+      // height: -(TAB_HEIGHT + 5),
     },
     shadowRadius: 2,
     shadowColor: 'black',
-    shadowOpacity: 0.8,
+    shadowOpacity: 0.7,
   },
   swiper: {
 
