@@ -27,6 +27,7 @@ export class Entity {
   static fromJSON(json) {
     // TODO: improve
     const entity = new Entity()
+    console.log("entity", json);
     entity["_id"] = json["_id"]
     entity["identifier"] = json["identifier"]
     entity["campus"] = json["campus"]
@@ -44,19 +45,17 @@ export class Entity {
 }
 
 export function fetchCampuses() {
-  return fetch(`${URL}/campuses`)
+  return fetch(`${URL}/places?categories[]=campus`)
     .then(response => response.json())
     .then(jsons => jsons.map(Entity.fromJSON))
 }
 
-export function fetchFaculties(campus) {
-  return fetch(`${URL}/campuses/${campus.identifier}/faculties`)
-    .then(response => response.json())
-    .then(jsons => jsons.map(Entity.fromJSON))
+export function fetchFacultiesAndBuildings(campus) {
+  return fetchChilds(campus, ...["faculty", "building", "school", "department"])
 }
 
-export function fetchBuildings(campus) {
-  return fetch(`${URL}/campuses/${campus.identifier}/buildings`)
+export function fetchChilds(place, ...categories) {
+  return fetch(`${URL}/places/${place._id}/childs?${categories.map(cat => 'categories[]=' + cat).join('&')}`)
     .then(response => response.json())
     .then(jsons => jsons.map(Entity.fromJSON))
 }

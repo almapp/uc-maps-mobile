@@ -5,11 +5,10 @@ import Tabs from 'react-native-tabs'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Swiper from 'react-native-swiper'
 import Button from 'react-native-button'
-import { RadioButtons } from 'react-native-radio-buttons'
 import { Actions } from 'react-native-router-flux'
 
 import CampusMarker from './markers/campus'
-import { fetchFaculties, fetchBuildings } from '../../models'
+import { fetchChilds, fetchFacultiesAndBuildings } from '../../models'
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -18,7 +17,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const FLAT_SAND = 'rgba(235, 216, 159, 0.6)'
 const FLAT_BLUE = 'rgba(49, 130, 217, 0.6)'
-const FLAT_PURPLE = 'rgba(71, 47, 151, 1.0)'
+const FLAT_PURPLE = 'rgba(90, 69, 168, 1.0)'
+const FLAT_LIGHT_PURPLE = 'rgba(115, 91, 204, 1.0)'
 
 const DEFAULT_REGION = {
   longitudeDelta: 0.09766039646630986,
@@ -46,17 +46,36 @@ export default class MapsView extends Component {
       campus: this.props.campus,
       sectors: [],
       selected: 0,
+      markers: [],
     }
     this.fetch()
   }
 
   fetch() {
-    return Promise.all([
-      fetchFaculties(this.props.campus),
-      fetchBuildings(this.props.campus),
-    ])
-    .then(results => results[0].concat(results[1]))
-    .then(sectors => this.setState({ sectors: sectors, selected: 0 }))
+    return fetchFacultiesAndBuildings(this.props.campus)
+      .then(sectors => this.setState({ sectors: sectors, selected: 0 }))
+  }
+
+  fetchWithCategory(...categories) {
+    const place = this.state.sectors[this.state.selected];
+    fetchChilds(place, ...categories)
+      .then(places => {
+        return places.map(place => {
+          const coordinates = place.center.coordinates
+          console.log(coordinates);
+          return {
+            coordinates: {
+              latitude: coordinates[1],
+              longitude: coordinates[0],
+            },
+            color: "#735bcc",
+          }
+        })
+      })
+      .then(markers => {
+        console.log(markers);
+        this.setState({ markers: markers })
+      });
   }
 
   render() {
@@ -79,11 +98,19 @@ export default class MapsView extends Component {
           key={i}
           coordinates={polygon}
           fillColor={this.state.selected === i ? FLAT_SAND : FLAT_SAND}
-          strokeColor="rgba(0,0,0,0.5"
+          strokeColor="rgba(0,0,0,0.5)"
           strokeWidth={1}
           />))
       }
     })
+
+    const markers = this.state.markers.map((marker, i) => (
+      <MapView.Marker
+        key={i}
+        coordinate={marker.coordinates}
+        pinColor={marker.color}
+      />
+    ))
 
     return (
       <View style={styles.container}>
@@ -101,6 +128,7 @@ export default class MapsView extends Component {
           >
 
           {polygons}
+          {markers}
 
         </MapView>
         <View style={styles.header}>
@@ -113,7 +141,7 @@ export default class MapsView extends Component {
         </View>
 
         <View style={styles.tabView}>
-          <Tabs selected="second" style={styles.tabs} iconStyle={{ height: TAB_HEIGHT }}>
+          <Tabs onSelect={this.selectService.bind(this)} style={styles.tabs} iconStyle={{ height: TAB_HEIGHT }}>
             {['man', 'woman', 'fork', 'trash-a', 'card', 'printer', 'ios-bookmarks', 'android-bicycle'].map((icon, i) => (
               <Icon key={i} color="white" size={25} name={icon} style={styles.tab} />
             ))}
@@ -157,6 +185,13 @@ export default class MapsView extends Component {
     // this.goTo(this.state.campus.location.coordinates[0][0])
   }
 
+  selectService(element) {
+    const name = element.props.name
+    console.log(name);
+    this.fetchWithCategory("bath")
+    return { style: { color:'red' } }
+  }
+
   selectSelector(e, state, context) {
     const center = this.state.sectors[state.index].center
     if (center) {
@@ -197,24 +232,22 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   tabView: {
-    // backgroundColor: 'rgba(49, 130, 217, 1.0)', //'rgba(0,0,0,0)',
-    backgroundColor: 'rgba(39, 105, 176, 1.0)', //'rgba(0,0,0,0)',
+    backgroundColor: FLAT_PURPLE,
     height: TAB_HEIGHT,
     // position: 'absolute',
     // left: 0,
     // right: 0,
     // bottom: 125,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: -5,
-    // },
-    // shadowRadius: 2,
-    // shadowColor: 'black',
-    // shadowOpacity: 0.8,
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowRadius: 2,
+    shadowColor: 'black',
+    shadowOpacity: 0.8,
   },
   tabs: {
-    // backgroundColor: 'rgba(49, 130, 217, 1.0)', //'rgba(0,0,0,0)',
-    backgroundColor: 'rgba(39, 105, 176, 1.0)', //'rgba(0,0,0,0)',
+    backgroundColor: FLAT_PURPLE,
     height: TAB_HEIGHT,
     paddingBottom: 1,
   },
@@ -229,6 +262,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     height: 44,
     width: 44,
+    backgroundColor: FLAT_PURPLE,
     borderRadius: 0,
   },
   search: {
@@ -240,10 +274,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     shadowOffset: {
       width: 0,
-      height: -3,
-      // height: -(TAB_HEIGHT + 5),
+      height: -2,
     },
-    shadowRadius: 2,
+    shadowRadius: 1,
     shadowColor: 'black',
     shadowOpacity: 0.7,
   },
@@ -276,7 +309,6 @@ const styles = StyleSheet.create({
     height: 22,
   },
   selector: {
-    // backgroundColor: 'red',
     height: 30,
     marginBottom: 12,
     flexDirection: 'row',
@@ -284,9 +316,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   details: {
+    color: FLAT_LIGHT_PURPLE,
     paddingLeft: 25,
   },
   classrooms: {
+    color: FLAT_LIGHT_PURPLE,
     paddingRight: 25,
   },
 })
