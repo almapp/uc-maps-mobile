@@ -58,11 +58,11 @@ export default class MapsView extends Component {
 
         <Footer
           style={styles.footer}
-          tabs={this.state.services}
           areas={this.state.areas}
           onServiceSelection={this.selectService.bind(this)}
           onAreaSelection={this.selectArea.bind(this)}
           onShowClassrooms={this.showClassrooms.bind(this)}
+          onShowServices={this.showServices.bind(this)}
           onShowDetails={this.showDetails.bind(this)}
           >
         </Footer>
@@ -117,6 +117,10 @@ export default class MapsView extends Component {
   }
 
   showDetails(area) {
+    console.log(area);
+  }
+
+  showServices(area) {
     console.log(area);
   }
 }

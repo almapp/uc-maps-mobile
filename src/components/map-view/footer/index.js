@@ -1,7 +1,6 @@
 import React, { StyleSheet, Text, View, Component } from 'react-native'
 import Swiper from 'react-native-swiper'
 import Button from 'react-native-button'
-import Tabs from 'react-native-tabs'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Colors from '../../../global/colors'
@@ -17,21 +16,12 @@ export default class Footer extends Component {
   static get defaultProps() {
     return {
       areas: [],
-      tabs: [{ icon: 'load-a' }],
     }
   }
 
   render() {
     return (
       <View style={styles.view.container}>
-
-        <View style={styles.tabView.container}>
-          <Tabs onSelect={this.selectService.bind(this)} style={styles.tabView.tabs} iconStyle={{ height: TAB_HEIGHT }}>
-            {this.props.tabs.map((tab, i) => (
-              <Icon key={i} color={tab.color || "white"} size={25} index={i} name={tab.icon} style={styles.tabView.tab} />
-            ))}
-          </Tabs>
-        </View>
 
         <Swiper ref="swiper" style={styles.swiper.container} height={HEIGHT} showsButtons={true} showsPagination={false} onMomentumScrollEnd={this.selectArea.bind(this)}>
           {this.props.areas.map((area, i) => (
@@ -44,7 +34,8 @@ export default class Footer extends Component {
 
         <View style={styles.selector.container}>
           <Button style={styles.selector.details} onPress={this.showDetails.bind(this)}>Detalles</Button>
-          <Button style={styles.selector.classrooms} onPress={this.showClassrooms.bind(this)}>Ver Salas</Button>
+          <Button style={styles.selector.classrooms} onPress={this.showClassrooms.bind(this)}>Salas</Button>
+          <Button style={styles.selector.classrooms} onPress={this.showServices.bind(this)}>Servicios</Button>
         </View>
 
     </View>
@@ -63,15 +54,15 @@ export default class Footer extends Component {
     if (this.props.onShowClassrooms) this.props.onShowClassrooms(this.props.areas[index])
   }
 
+  showServices() {
+    // TODO: get index
+    const index = 0
+    if (this.props.onShowServices) this.props.onShowServices(this.props.areas[index])
+  }
+
   selectArea(e, state, context) {
     const index = state.index
     if (this.props.onAreaSelection) this.props.onAreaSelection(this.props.areas[index])
-  }
-
-  selectService(element) {
-    const index = element.props.index
-    if (this.props.onServiceSelection) this.props.onServiceSelection(this.props.tabs[index])
-    return { style: { color: 'transparent' } } // ?
   }
 }
 
