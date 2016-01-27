@@ -140,15 +140,17 @@ const styles = {
       marginBottom: 12,
       flexDirection: 'row',
       alignItems: 'center',
+      marginLeft: 10,
+      marginRight: 10,
       justifyContent: 'space-around',
     },
     details: {
       color: Colors.COMPLEMENT,
-      paddingLeft: 25,
+      // paddingLeft: 25,
     },
     classrooms: {
       color: Colors.COMPLEMENT,
-      paddingLeft: 25,
+      // paddingLeft: 25,
     },
   }),
 }
