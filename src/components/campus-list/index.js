@@ -9,14 +9,16 @@ export default class CampusList extends Component {
   constructor(props) {
     super(props)
 
-    if (Platform.OS === 'ios') {
-      StatusBarIOS.setStyle('default', true)
-    }
-
     this.state = {
       campuses: [],
     }
     this.fetch();
+  }
+
+  componentWillMount() {
+    if (Platform.OS === 'ios') {
+      StatusBarIOS.setStyle('default', true)
+    }
   }
 
   fetch() {

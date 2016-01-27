@@ -2,7 +2,7 @@ import React, {StatusBarIOS, Component, Navigator, StyleSheet, Platform} from 'r
 import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
 
 import InformationView from '../information'
-import MapsView from '../map'
+import MapsView from '../map-view'
 import CampusList from '../campus-list'
 
 export default class Main extends Component {

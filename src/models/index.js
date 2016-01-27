@@ -4,10 +4,10 @@ import { URL } from './settings'
 
 export class Entity {
   get center() {
-    if (this.location.type === 'Point') {
-      return this.location
-    } else {
-      return gju.centroid(this.location)
+    switch (this.location.type) {
+      case 'Point': return this.location
+      case 'Polygon': return gju.centroid(this.location)
+      default: return null
     }
   }
 
@@ -27,7 +27,6 @@ export class Entity {
   static fromJSON(json) {
     // TODO: improve
     const entity = new Entity()
-    console.log("entity", json);
     entity["_id"] = json["_id"]
     entity["identifier"] = json["identifier"]
     entity["campus"] = json["campus"]
