@@ -32,7 +32,7 @@ export default class ClassroomModal extends Component {
           <ListView
             style={{ marginTop: 12, marginBottom: 12 }}
             dataSource={datasource}
-            renderRow={(place) => <Row place={place} />}
+            renderRow={(place) => <Row place={place} onSelection={this.onSelection.bind(this)}/>}
             />
         </View>
         <View style={[styles.buttons, styles.shadow]}>
@@ -43,13 +43,17 @@ export default class ClassroomModal extends Component {
     )
   }
 
+  onSelection(...place) {
+    Actions.dismiss()
+    this.props.callback(place)
+  }
+
   close() {
     Actions.dismiss()
   }
 
   all() {
-    Actions.dismiss()
-    this.props.callback(this.state.places)
+    this.onSelection(...this.state.places)
   }
 }
 
