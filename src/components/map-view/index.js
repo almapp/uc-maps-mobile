@@ -50,11 +50,18 @@ export default class MapsView extends Component {
     return (
       <View style={styles.container}>
 
-        <EasyMap ref="maps" style={styles.map} initial={this.state.campus} areas={this.state.areas}>
-        </EasyMap>
+        <EasyMap
+          ref="maps"
+          style={styles.map}
+          initial={this.state.campus}
+          areas={this.state.areas}
+          places={this.state.places}
+          />
 
-        <Header style={styles.header} onBackButton={this.goBack}>
-        </Header>
+        <Header
+          style={styles.header}
+          onBackButton={this.goBack}
+          />
 
         <Footer
           style={styles.footer}
@@ -64,8 +71,7 @@ export default class MapsView extends Component {
           onShowClassrooms={this.showClassrooms.bind(this)}
           onShowServices={this.showServices.bind(this)}
           onShowDetails={this.showDetails.bind(this)}
-          >
-        </Footer>
+          />
 
       </View>
     )
@@ -113,7 +119,8 @@ export default class MapsView extends Component {
   }
 
   showClassrooms(area) {
-    console.log(area);
+    const callback = (places) => this.setState({ places: places })
+    Actions.classrooms({ area: area, callback: callback })
   }
 
   showDetails(area) {

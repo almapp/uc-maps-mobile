@@ -62,6 +62,7 @@ export default class EasyMap extends Component {
         >
 
         {polygons}
+        {markers}
 
       </MapView>
     )

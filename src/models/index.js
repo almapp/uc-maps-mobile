@@ -58,3 +58,7 @@ export function fetchChilds(place, ...categories) {
     .then(response => response.json())
     .then(jsons => jsons.map(Entity.fromJSON))
 }
+
+export function fetchClasrooms(place) {
+  return fetchChilds(place, ...["classroom", "lab", "auditorium"])
+}
