@@ -16,16 +16,6 @@ export default class MapsView extends Component {
       areas: [],
       selected: 0,
       places: [],
-      services: [
-        { icon: 'man', categories: [] },
-        { icon: 'woman', categories: [] },
-        { icon: 'fork', categories: [] },
-        { icon: 'trash-a', categories: [] },
-        { icon: 'card', categories: [] },
-        { icon: 'printer', categories: [] },
-        { icon: 'ios-bookmarks', categories: [] },
-        { icon: 'android-bicycle', categories: [] },
-      ],
     }
     this.fetch()
   }
@@ -128,7 +118,8 @@ export default class MapsView extends Component {
   }
 
   showServices(area) {
-    console.log(area);
+    const callback = (service) => this.setState({ places: service.places })
+    Actions.services({ area: area, callback: callback })
   }
 }
 
