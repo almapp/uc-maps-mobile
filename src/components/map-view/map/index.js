@@ -55,7 +55,7 @@ export default class EasyMap extends Component {
         style={styles.maps}
         initialRegion={this.state.initial}
         mapType="hybrid"
-        showsCompass={true}
+        showsCompass={false}
         showsPointsOfInterest={false}
         showsTraffic={false}
         onRegionChangeComplete={this.onRegionChangeComplete}
@@ -78,7 +78,15 @@ export default class EasyMap extends Component {
 
   createMarker(place) {
     const coordinate = parseGeoJSONPoint(place.center)
-    return <MapView.Marker key={place.identifier} coordinate={coordinate} />
+    return (
+      <MapView.Marker
+        key={place.identifier}
+        coordinate={coordinate}
+        title={place.shortName || place.name}
+        description={`Piso: ${(place.location && place.location.floor) ? place.location.floor : '?'}`}
+        pinColor={Colors.HIGH_CONTRAST}
+        />
+    )
   }
 
   createPolygon(place) {
