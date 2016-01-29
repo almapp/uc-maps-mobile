@@ -2,7 +2,7 @@ import React, { View, Text, Component, StyleSheet, ListView } from 'react-native
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 
-import { fetchClasrooms } from '../../models'
+import { Entity, fetchClasrooms } from '../../models'
 import Colors from '../../global/colors'
 import Row from './row'
 
@@ -25,7 +25,9 @@ export default class ClassroomModal extends Component {
   }
 
   render() {
-    const datasource = this.datasource.cloneWithRows(this.state.places)
+    const places = this.state.places.sort(Entity.compare)
+    const datasource = this.datasource.cloneWithRows(places)
+
     return (
       <View style={styles.container}>
         <View style={[styles.content, styles.shadow]}>
