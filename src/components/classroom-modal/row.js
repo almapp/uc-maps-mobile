@@ -10,20 +10,32 @@ export default class Row extends Component {
 
   render() {
     const place = this.props.place
-    if (place.location && place.location.floor) {
-      var floor = <Text style={styles.detail}>Piso {place.location.floor}</Text>
-    }
-    return (
-      <TouchableHighlight onPress={this.onPress.bind(this)} underlayColor={Colors.CONTRAST}>
-        <View style={styles.container}>
-          <Text style={styles.title}>
-            {place.shortName || place.name}
-          </Text>
-          {floor}
-          <Icon name="chevron-right" style={styles.disclosure} />
-        </View>
-      </TouchableHighlight>
+    const enabled = place.hasPosition
+
+    const element = (
+      <View style={styles.container}>
+
+        <Text style={[styles.title, { color: (enabled) ? 'black' : 'grey' }]}>
+          {place.shortName || place.name}
+        </Text>
+
+        <Text style={[styles.detail, { color: (enabled) ? 'black' : 'grey' }]}>
+          Piso: {(place.location && place.location.floor) ? place.location.floor : '?'}
+        </Text>
+
+        <Icon name="chevron-right" style={styles.disclosure} />
+
+      </View>
     )
+
+    if (enabled) {
+      return (
+        <TouchableHighlight onPress={this.onPress.bind(this)} underlayColor={Colors.CONTRAST}>
+          {element}
+        </TouchableHighlight>
+      )
+    }
+    return element
   }
 
   onPress() {

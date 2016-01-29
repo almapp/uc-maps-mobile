@@ -24,6 +24,16 @@ export class Entity {
     })
   }
 
+  get hasPosition() {
+    return true
+  }
+
+  static compare(a, b) {
+    if (a.identifier < b.identifier) return -1;
+    else if (a.identifier > b.identifier) return 1;
+    else return 0;
+  }
+
   static fromJSON(json) {
     // TODO: improve
     const entity = new Entity()
