@@ -2,8 +2,8 @@ import React, { View, Text, Component, StyleSheet, ListView } from 'react-native
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 
-import { Entity, fetchClasrooms } from '../../models'
-import Colors from '../../global/colors'
+import { Entity, fetchClasrooms } from '../../../models'
+import Colors from '../../../global/colors'
 import Row from './row'
 
 export default class ClassroomModal extends Component {

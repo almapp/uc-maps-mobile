@@ -4,8 +4,8 @@ import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flu
 import InformationView from '../information'
 import MapsView from '../map-view'
 import CampusList from '../campus-list'
-import ClassroomModal from '../classroom-modal'
-import ServicesModal from '../services-modal'
+import ClassroomModal from '../modals/classrooms'
+import ServicesModal from '../modals/services'
 
 export default class Main extends Component {
   constructor(props) {
