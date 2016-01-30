@@ -1,6 +1,6 @@
 'use strict';
 import React, { AppRegistry } from 'react-native';
 
-import Main from './src/components/main'
+import AppRouter from './src/components/router'
 
-AppRegistry.registerComponent('UCMaps', () => Main);
+AppRegistry.registerComponent('UCMaps', () => AppRouter);

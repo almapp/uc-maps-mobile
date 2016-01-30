@@ -32,10 +32,8 @@ export default class CampusList extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <Parallax.ScrollView style={styles.scrollView}>
-
-          <View style={{height: 64}}></View>
 
           {this.state.campuses.map((campus, i) => (
             <Parallax.Image

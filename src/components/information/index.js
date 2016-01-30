@@ -18,7 +18,7 @@ export default class InformationView extends Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.stage} style={{marginTop: 64}}>
+      <ScrollView contentContainerStyle={styles.stage} style={[styles.container, this.props.style]}>
         <TableView>
           <Section header="Legal" footer="Resumen: tu localización nunca es compartida y no se garantiza que todos los datos aquí sean los correctos.">
             <Cell cellstyle="Subtitle" title="Aplicación no oficial de la PUC" detail="Por y para la comunidad" />
@@ -51,8 +51,11 @@ export default class InformationView extends Component {
 }
 
 const styles = StyleSheet.create({
-  stage: {
+  container: {
+    flex: 1,
     backgroundColor: '#EFEFF4',
+  },
+  stage: {
     paddingTop: 20,
     paddingBottom: 20,
   },
