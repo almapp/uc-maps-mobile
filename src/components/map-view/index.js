@@ -73,7 +73,7 @@ export default class MapsView extends Component {
 
   // Map point
   goToCoordinates(coordinates) {
-    this.refs.maps.animateToRegion(coordinates)
+    this.refs.maps.animateToCoordinates(coordinates)
   }
 
   // GeoJSON point

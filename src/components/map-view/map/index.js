@@ -58,6 +58,7 @@ export default class EasyMap extends Component {
         showsCompass={false}
         showsPointsOfInterest={false}
         showsTraffic={false}
+        showsUserLocation={false}
         onRegionChangeComplete={this.onRegionChangeComplete}
         >
 
@@ -104,8 +105,8 @@ export default class EasyMap extends Component {
     )
   }
 
-  animateToRegion(region) {
-    this.refs.maps.animateToRegion(region)
+  animateToCoordinates(region) {
+    this.refs.maps.animateToCoordinate(region)
   }
 
   onRegionChangeComplete(region) {
