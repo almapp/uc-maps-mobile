@@ -131,15 +131,17 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    right: margin,
+    top: 20,
+    left: 0,
+    right: 0,
+    margin: margin,
     height: 44,
-    top: 20 + margin,
-    left: margin,
+    maxWidth: 320,
   },
   maps: {
     flex: 1,
   },
   footer: {
-    alignSelf: 'flex-end',
+
   }
 })
