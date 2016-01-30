@@ -34,7 +34,7 @@ export default class Footer extends Component {
           style={styles.swiper.container}
           dataSource={datasource}
           renderPage={this.renderPage.bind(this)}
-          isLoop={true}
+          isLoop={this.state.areas > 1}
           onChangePage={this.selectArea.bind(this)}
           autoPlay={false}/>
 
