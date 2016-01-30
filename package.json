@@ -2,7 +2,8 @@
   "name": "UCMaps",
   "description": "Mobile app written with React Native",
   "homepage": "https://github.com/almapp/uc-maps-mobile#readme",
-  "version": "0.0.1",
+  "policy": "https://almapp.github.io/uc-maps-mobile/policy",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -19,6 +20,7 @@
   ],
   "author": {
     "name": "Patricio López Juri",
+    "information": "Ingeniería",
     "email": "patricio@lopezjuri.com",
     "url": "https://lopezjuri.com"
   },
@@ -34,6 +36,7 @@
     "react-native-maps": "^0.2.3",
     "react-native-parallax": "^0.2.2",
     "react-native-router-flux": "^2.1.1",
+    "react-native-tableview-simple": "^0.5.0",
     "react-native-tabs": "^0.1.10",
     "react-native-vector-icons": "^1.1.0",
     "react-native-viewpager": "^0.2.1"

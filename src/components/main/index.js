@@ -19,10 +19,12 @@ export default class Main extends Component {
         <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight}/>
         <Schema name="withoutAnimation"/>
 
+        <Route name="campuses" schema="default" title="Selecciona Campus" component={CampusList} hideNavBar={false} initial={true} />
+        <Route name="information" schema="default" title="Información" component={InformationView} hideNavBar={false} />
         <Route name="maps" schema="default" title="Mapa" component={MapsView} />
+
         <Route name="classrooms" type="modal" component={ClassroomModal} />
         <Route name="services" type="modal" component={ServicesModal} />
-        <Route name="campuses" schema="default" title="Selecciona Campus" component={CampusList} initial={true} hideNavBar={false} />
       </Router>
     )
   }
