@@ -14,7 +14,7 @@ export default class Header extends Component {
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
-        <Icon.Button borderRadius={0} name="chevron-left" style={styles.button} onPress={this.props.onBackButton} />
+        <Icon.Button borderRadius={0} name="chevron-left" style={styles.button} iconStyle={styles.icon} onPress={this.props.onBackButton} />
         <View>
           <Text style={styles.search}>
             Búsqueda
@@ -44,12 +44,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   button: {
-    // textAlign: 'center', is not working
-    paddingLeft: 15,
     height: 44,
-    width: 44,
+    width: 60,
     backgroundColor: Colors.MAIN,
     borderRadius: 0,
+  },
+  icon: {
+    textAlign: 'center',
+    paddingLeft: 15,
   },
   search: {
     marginLeft: 8,
