@@ -96,6 +96,7 @@ const styles = {
       shadowRadius: 1,
       shadowColor: 'black',
       shadowOpacity: 0.7,
+      elevation: 20,
     },
   }),
 
@@ -128,7 +129,7 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       marginBottom: 30,
-      marginTop: 13,
+      marginTop: 15,
       marginLeft: SIDE_MARGIN,
       marginRight: SIDE_MARGIN,
       justifyContent: 'space-between',
