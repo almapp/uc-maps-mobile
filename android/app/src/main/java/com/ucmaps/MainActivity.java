@@ -1,4 +1,4 @@
-package com.ucmaps;
+package com.lopezjuri.ucmaps;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
