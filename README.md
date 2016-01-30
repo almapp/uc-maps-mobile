@@ -31,6 +31,16 @@ Project dependencies:
 npm install
 ```
 
+### API Keys
+
+To run on Android, first you need a valid Google Maps API Key. Then put it in `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<meta-data
+  android:name="com.google.android.geo.API_KEY"
+  android:value="API_KEY"/>
+```
+
 ### Run
 
 Start the development server with:
