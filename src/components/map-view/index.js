@@ -94,7 +94,7 @@ export default class MapsView extends Component {
   }
 
   showDetails(area) {
-    console.log(area);
+    Actions.detail({ area: area })
   }
 
   showClassrooms(area) {

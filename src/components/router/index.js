@@ -2,6 +2,7 @@ import React, {StatusBarIOS, Component, Navigator, StyleSheet, Platform} from 'r
 import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
 
 import InformationView from '../information'
+import DetailView from '../detail'
 import MapsView from '../map-view'
 import Main from '../main'
 import ClassroomModal from '../modals/classrooms'
@@ -20,6 +21,7 @@ export default class AppRouter extends Component {
         <Schema name="withoutAnimation"/>
 
         <Route name="campuses" schema="default" title="Selecciona Campus" component={Main} hideNavBar={false} initial={true} />
+        <Route name="detail" schema="default" title="Detalle" component={DetailView} hideNavBar={false} />
         <Route name="information" schema="default" title="Información" component={InformationView} hideNavBar={false} />
         <Route name="maps" schema="default" title="Mapa" component={MapsView} />
 
