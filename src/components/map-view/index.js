@@ -14,8 +14,8 @@ export default class MapsView extends Component {
     this.state = {
       campus: this.props.campus,
       areas: [],
-      selected: 0,
       places: [],
+      selected: 0,
     }
     this.fetch()
   }
@@ -29,11 +29,6 @@ export default class MapsView extends Component {
   fetch() {
     return fetchFacultiesAndBuildings(this.props.campus)
       .then(areas => this.setState({ areas: areas, selected: 0 }))
-  }
-
-  fetchWithCategory(...categories) {
-    return fetchChilds(this.state.areas[this.state.selected], ...categories)
-      .then(places => this.setState({ places: places }))
   }
 
   render() {
@@ -56,7 +51,6 @@ export default class MapsView extends Component {
         <Footer
           style={styles.footer}
           areas={this.state.areas}
-          onServiceSelection={this.selectService.bind(this)}
           onAreaSelection={this.selectArea.bind(this)}
           onShowClassrooms={this.showClassrooms.bind(this)}
           onShowServices={this.showServices.bind(this)}
@@ -95,26 +89,17 @@ export default class MapsView extends Component {
     this.goToPoint(this.state.campus.center)
   }
 
-  scrollTo(index) {
-    this.refs.swiper.scrollTo(index)
-  }
-
   selectArea(area) {
     this.goToPlace(area)
-    // this.goTo(this.state.campus.location.coordinates[0][0])
   }
 
-  selectService(service) {
-    // this.fetchWithCategory("bath")
+  showDetails(area) {
+    console.log(area);
   }
 
   showClassrooms(area) {
     const callback = (places) => this.setState({ places: places })
     Actions.classrooms({ area: area, callback: callback })
-  }
-
-  showDetails(area) {
-    console.log(area);
   }
 
   showServices(area) {
