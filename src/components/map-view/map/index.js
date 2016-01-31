@@ -38,6 +38,7 @@ export default class EasyMap extends Component {
     return {
       areas: [],
       places: [],
+      mapType: 'hybrid',
     }
   }
 
@@ -54,7 +55,7 @@ export default class EasyMap extends Component {
         ref="maps"
         style={styles.maps}
         initialRegion={this.state.initial}
-        mapType="hybrid"
+        mapType={this.props.mapType}
         showsCompass={false}
         showsPointsOfInterest={false}
         showsTraffic={false}
