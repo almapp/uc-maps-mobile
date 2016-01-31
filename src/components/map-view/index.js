@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     right: 0,
     margin: margin,
     height: 44,
-    maxWidth: 320,
+    // maxWidth: 320,
   },
   maps: {
     flex: 1,
