@@ -743,7 +743,7 @@
 				INFOPLIST_FILE = UCMaps/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.lopezjuri.uc-maps";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.almapp.ucmaps";
 				PRODUCT_NAME = UCMaps;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -764,7 +764,7 @@
 				INFOPLIST_FILE = UCMaps/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.lopezjuri.uc-maps";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.almapp.ucmaps";
 				PRODUCT_NAME = UCMaps;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -72,7 +72,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.lopezjuri.ucmaps"
+        applicationId "com.almapp.ucmaps"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
