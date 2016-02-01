@@ -1,5 +1,6 @@
 import React, { View, Text, Component, StyleSheet, ToolbarAndroid } from 'react-native'
 import { Tab, TabLayout } from 'react-native-android-tablayout'
+import { Actions } from 'react-native-router-flux'
 
 import CampusList from '../campus-list'
 import InformationView from '../information'
@@ -34,7 +35,7 @@ export default class Main extends Component {
           actions={[
             {title: 'Buscar', show: 'always'},
           ]}
-          onActionSelected={(position) => console.log(position)} />
+          onActionSelected={(position) => Actions.search()} />
 
         <TabLayout
           style={styles.tabs}
