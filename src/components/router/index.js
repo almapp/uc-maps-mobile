@@ -22,10 +22,12 @@ export default class AppRouter extends Component {
       onRight: () => Actions.search(),
       rightTitle: 'Buscar',
     }
+    const android = (Platform.OS !== 'ios')
+    const mode = (android) ? 'replace' : 'default'
 
     return (
       <Router
-        hideNavBar={Platform.OS !== 'ios'}
+        hideNavBar={android}
         barButtonTextStyle={styles.barButtonTextStyle}
         rightButtonTextStyle={styles.barButtonTextStyle}
         leftButtonTextStyle={styles.barButtonTextStyle}
@@ -35,10 +37,10 @@ export default class AppRouter extends Component {
         <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight}/>
         <Schema name="withoutAnimation"/>
 
-        <Route name="main" schema="default" title="Mapas UC" component={Main} initial={true} {...search} />
-        <Route name="detail" schema="default" title="Detalle" component={DetailView} />
-        <Route name="search" schema="default" title="Buscar" component={SearchView} />
-        <Route name="maps" schema="default" title="Mapa" component={MapsView} leftTitle={" "} {...search} />
+        <Route name="main" schema={mode} title="Mapas UC" component={Main} initial={true} {...search} />
+        <Route name="detail" schema={mode} title="Detalle" component={DetailView} />
+        <Route name="search" schema={mode} title="Buscar" component={SearchView} />
+        <Route name="maps" schema={mode} title="Mapa" component={MapsView} leftTitle={" "} {...search} />
 
         <Route name="classrooms" type="modal" component={ClassroomModal} />
         <Route name="services" type="modal" component={ServicesModal} />

@@ -30,7 +30,7 @@ export default class MapsView extends Component {
 
   render() {
     const campus = this.state.campus
-    const toolbar = (Platform.OS !== 'ios') ? <Toolbar title={campus.shortName || campus.name}/> : undefined
+    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton title={campus.shortName || campus.name}/> : undefined
 
     return (
       <View style={styles.container}>
