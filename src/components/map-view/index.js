@@ -16,8 +16,8 @@ export default class MapsView extends Component {
 
     this.state = {
       campus: this.props.campus,
-      areas: [],
-      places: [],
+      areas: this.props.areas || [],
+      places: this.props.places || [],
       selected: 0,
     }
     this.fetch()
@@ -30,7 +30,7 @@ export default class MapsView extends Component {
 
   render() {
     const campus = this.state.campus
-    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton title={campus.shortName || campus.name}/> : undefined
+    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton title={campus.shortName || campus.name} onActionSelected={(_) => Actions.search({ parent: campus })} /> : undefined
 
     return (
       <View style={styles.container}>
