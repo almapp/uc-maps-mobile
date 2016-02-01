@@ -2,6 +2,7 @@ import React, { View, Text, Component, StyleSheet, ToolbarAndroid } from 'react-
 import { Tab, TabLayout } from 'react-native-android-tablayout'
 import { Actions } from 'react-native-router-flux'
 
+import Toolbar from '../toolbar'
 import CampusList from '../campus-list'
 import InformationView from '../information'
 import Colors from '../../global/colors'
@@ -27,15 +28,8 @@ export default class Main extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ToolbarAndroid
-          style={styles.toolbar}
-          title={'  Mapas UC'}
-          titleColor="white"
-          logo={require('./img/logo.png')}
-          actions={[
-            {title: 'Buscar', show: 'always'},
-          ]}
-          onActionSelected={(position) => Actions.search()} />
+
+        <Toolbar title="Mapas UC"/>
 
         <TabLayout
           style={styles.tabs}
@@ -64,9 +58,5 @@ const styles = StyleSheet.create({
     elevation: 10,
     backgroundColor: Colors.MAIN,
     // marginTop: 64,
-  },
-  toolbar: {
-    height: 56,
-    backgroundColor: Colors.MAIN,
   },
 })

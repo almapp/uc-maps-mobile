@@ -1,11 +1,14 @@
-import React, { StyleSheet, Text, View, Component, Dimensions, Platform, StatusBarIOS } from 'react-native'
+import React, { StyleSheet, Text, View, Component, Dimensions, Platform, ToolbarAndroid } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import EasyMap from './map'
 import Footer from './footer'
 import Header from './header'
+import Toolbar from '../toolbar'
+import Colors from '../../global/colors'
 
 import { fetchChilds, fetchFacultiesAndBuildings } from '../../models'
+
 
 export default class MapsView extends Component {
   constructor(props) {
@@ -26,13 +29,18 @@ export default class MapsView extends Component {
   }
 
   render() {
+    const campus = this.state.campus
+    const toolbar = (Platform.OS !== 'ios') ? <Toolbar title={campus.shortName || campus.name}/> : undefined
+
     return (
       <View style={styles.container}>
+
+        {toolbar}
 
         <EasyMap
           ref="maps"
           style={styles.map}
-          initial={this.state.campus}
+          initial={campus}
           areas={this.state.areas}
           places={this.state.places}
           />
@@ -117,5 +125,5 @@ const styles = StyleSheet.create({
   },
   footer: {
 
-  }
+  },
 })
