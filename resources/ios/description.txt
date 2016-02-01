@@ -1,0 +1,9 @@
+Mapas UC forma parte de la segunda versión de Alma Máter UC, que en su versión anterior alcanzó más de 15.000 descargas.
+
+Busca todas las salas, edificios y facultades en los campus de la universidad. Encuentra además servicios como baños, bibliotecas, salas de estudio, puestos de comida y más.
+
+Esta aplicación no es oficial y está hecha por la comunidad, para la comunidad.
+
+¿Eres desarrollador?
+Esta aplicación es Open Source y su código está disponible bajo licencia GPL-3.0 en:
+https://github.com/almapp/uc-maps-mobile
