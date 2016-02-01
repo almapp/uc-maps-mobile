@@ -55,7 +55,11 @@ To run on an Android device, first you need the Android SDK and allow developmen
 npm run android
 ```
 
-On iOS, go and open `ios/UCMaps.xcodeproj` with XCode and run the app.
+To run on an iOS emulator:
+
+```sh
+npm run ios
+```
 
 [ci-image]: https://travis-ci.org/almapp/uc-maps-mobile.svg
 [ci-url]: https://travis-ci.org/almapp/uc-maps-mobile
