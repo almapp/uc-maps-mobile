@@ -20,12 +20,6 @@ export default class MapsView extends Component {
     this.fetch()
   }
 
-  componentWillMount() {
-    if (Platform.OS === 'ios') {
-      StatusBarIOS.setStyle('light-content', true)
-    }
-  }
-
   fetch() {
     return fetchFacultiesAndBuildings(this.props.campus)
       .then(areas => this.setState({ areas: areas, selected: 0 }))
@@ -41,11 +35,6 @@ export default class MapsView extends Component {
           initial={this.state.campus}
           areas={this.state.areas}
           places={this.state.places}
-          />
-
-        <Header
-          style={styles.header}
-          onBackButton={this.goBack}
           />
 
         <Footer

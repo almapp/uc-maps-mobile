@@ -1,5 +1,5 @@
-import React, { View, Text, Component, StyleSheet, Platform, StatusBarIOS } from 'react-native'
-import {Actions} from 'react-native-router-flux'
+import React, { View, Text, Component, StyleSheet, Platform } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import Parallax from 'react-native-parallax'
 import Icon from 'react-native-vector-icons/Ionicons'
 
@@ -13,12 +13,6 @@ export default class CampusList extends Component {
       campuses: [],
     }
     this.fetch();
-  }
-
-  componentWillMount() {
-    if (Platform.OS === 'ios') {
-      StatusBarIOS.setStyle('default', true)
-    }
   }
 
   fetch() {

@@ -1,4 +1,4 @@
-import React, { View, Text, Component, StyleSheet } from 'react-native'
+import React, { View, Text, Component, StyleSheet, ToolbarAndroid } from 'react-native'
 import { Tab, TabLayout } from 'react-native-android-tablayout'
 
 import CampusList from '../campus-list'
@@ -26,13 +26,24 @@ export default class Main extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <ToolbarAndroid
+          style={styles.toolbar}
+          title={'  Mapas UC'}
+          titleColor="white"
+          logo={require('./img/logo.png')}
+          actions={[
+            {title: 'Buscar', show: 'always'},
+          ]}
+          onActionSelected={(position) => console.log(position)} />
+
         <TabLayout
           style={styles.tabs}
+          selectedTabIndicatorColor="white"
           selectedTab={this.state.selected}
           onTabSelected={e => this.setState({ selected: e.nativeEvent.position })}>
 
-          <Tab name="Mapas" accessibilityLabel="Mapas"/>
-          <Tab name="Información" accessibilityLabel="Información"/>
+          <Tab name="Mapas" accessibilityLabel="Mapas" textColor={this.state.selected === 0 ? 'white' :'#d3d3d3'} />
+          <Tab name="Información" accessibilityLabel="Información" textColor={this.state.selected === 1 ? 'white' :'#d3d3d3'} />
 
         </TabLayout>
 
@@ -49,6 +60,12 @@ const styles = StyleSheet.create({
     // backgroundColor: '#EFEFF4',
   },
   tabs: {
-    marginTop: 64,
+    elevation: 10,
+    backgroundColor: Colors.MAIN,
+    // marginTop: 64,
+  },
+  toolbar: {
+    height: 56,
+    backgroundColor: Colors.MAIN,
   },
 })
