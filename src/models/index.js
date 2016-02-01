@@ -64,7 +64,9 @@ export function fetchFacultiesAndBuildings(campus) {
 }
 
 export function fetchChilds(place, ...categories) {
-  return fetch(`${URL}/places/${place._id}/childs?${categories.map(cat => 'categories[]=' + cat).join('&')}`)
+  categories = categories.map(cat => 'categories[]=' + cat).join('&')
+  const path = place ? `places/${place._id}/childs?${categories}` : `places?${categories}`
+  return fetch(`${URL}/${path}`)
     .then(response => response.json())
     .then(jsons => jsons.map(Entity.fromJSON))
 }
