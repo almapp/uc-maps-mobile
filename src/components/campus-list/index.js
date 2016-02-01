@@ -3,6 +3,7 @@ import { Actions } from 'react-native-router-flux'
 import Parallax from 'react-native-parallax'
 import Icon from 'react-native-vector-icons/Ionicons'
 
+import Cell from './cell'
 import { fetchCampuses } from '../../models'
 
 export default class CampusList extends Component {
@@ -30,18 +31,7 @@ export default class CampusList extends Component {
         <Parallax.ScrollView style={styles.scrollView}>
 
           {this.state.campuses.map((campus, i) => (
-            <Parallax.Image
-              key={i}
-              onPress={this.selectCampus.bind(this, campus)}
-              style={cellStyles.image}
-              overlayStyle={cellStyles.overlay}
-              source={{uri: this.getImage(campus)}}>
-
-              <Text numberOfLines={2} style={cellStyles.name}>{campus.name}</Text>
-              <Text numberOfLines={2} style={cellStyles.address}>{campus.address}</Text>
-              <Icon name="chevron-right" style={cellStyles.disclosure} />
-
-            </Parallax.Image>
+            <Cell key={i} campus={campus} image={this.getImage(campus)} onCampusSelect={this.selectCampus.bind(this, campus)}/>
           ))}
 
         </Parallax.ScrollView>
@@ -49,60 +39,10 @@ export default class CampusList extends Component {
     )
   }
 
-  selectCampus(campus, element) {
+  selectCampus(campus) {
     Actions.maps({ campus: campus })
   }
 }
-
-const text = {
-  color: 'white',
-  textAlign: 'center',
-  marginLeft: 25,
-  marginRight: 25,
-  marginBottom: 2,
-  shadowOffset: {
-    width: 0,
-    height: 0,
-  },
-  shadowRadius: 1,
-  shadowColor: 'black',
-  shadowOpacity: 0.8,
-}
-
-const cellStyles = StyleSheet.create({
-  image: {
-    height: 100,
-    // marginTop: 5,
-    // marginLeft: 5,
-    // marginRight: 5,
-  },
-  overlay: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  name: {
-    fontSize: 20,
-    lineHeight: 25,
-    fontWeight: 'bold',
-    ...text,
-  },
-  address: {
-    fontWeight: '100',
-    fontSize: 12,
-    ...text,
-  },
-  disclosure: {
-    position: 'absolute',
-    width: 10,
-    height: 10,
-    right: 10,
-    top: (100 / 2) - (10 / 2),
-    color: 'white',
-  },
-})
 
 const styles = StyleSheet.create({
   container: {
