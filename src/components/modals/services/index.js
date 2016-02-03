@@ -14,7 +14,7 @@ export default class ServicesModal extends Component {
       // Add 'places' array to each 'service'
       services: this.props.services.map(s => Object.assign(s, { places: [] }))
     }
-    this.fetch()
+    this.fetch().done()
   }
 
   static get defaultProps() {
@@ -68,7 +68,7 @@ export default class ServicesModal extends Component {
         })
 
         // Update view
-        this.setState({ services: this.state.services })
+        return this.setState({ services: this.state.services })
       })
   }
 

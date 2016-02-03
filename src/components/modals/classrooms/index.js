@@ -12,7 +12,7 @@ export default class ClassroomModal extends Component {
     this.state = {
       places: [],
     }
-    this.fetch()
+    this.fetch().done()
   }
 
   fetch() {

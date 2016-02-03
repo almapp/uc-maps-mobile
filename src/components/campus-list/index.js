@@ -13,7 +13,7 @@ export default class CampusList extends Component {
     this.state = {
       campuses: [],
     }
-    this.fetch();
+    this.fetch().done()
   }
 
   fetch() {

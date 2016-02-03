@@ -1,5 +1,5 @@
 import React, { StyleSheet, Text, View, Component, Dimensions, Platform, StatusBarIOS } from 'react-native'
-
+import TimerMixin from 'react-timer-mixin'
 import MapView from 'react-native-maps'
 
 import Colors from '../../../global/colors'
@@ -26,29 +26,33 @@ function parseGeoJSONPoint(json) {
 }
 
 
-export default class EasyMap extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
+export default React.createClass({
+  mixins: [TimerMixin],
+
+  getInitialState: function() {
+    return {
       initial: (this.props.initial) ? parseGeoJSONPoint(this.props.initial.center) : DEFAULT_REGION,
     }
-  }
+  },
 
-  static get defaultProps() {
+  getDefaultProps: function() {
     return {
       areas: [],
       places: [],
       mapType: 'hybrid',
     }
-  }
+  },
 
-  render() {
-    const polygons = this.props.areas
-                      .map(area => this.createPolygon(area))
-                      .filter(p => p !== null)
-    const markers = this.props.places
-                      .map(place => this.createMarker(place))
-                      .filter(p => p !== null)
+  render: function() {
+    const polygons = this.props.areas.map(this.createPolygon).filter(p => p !== null)
+    const markers = this.props.places.map(this.createMarker).filter(p => p !== null)
+
+    if (this.props.places.length) {
+      this.setTimeout(() => {
+        const reference = this.refs[this.props.places[0].identifier]
+        if (reference) reference.showCallout()
+      }, 700);
+    }
 
     return (
       <MapView
@@ -68,30 +72,24 @@ export default class EasyMap extends Component {
 
       </MapView>
     )
-  }
+  },
 
-  createDisplay(place) {
-    switch (place.location.type) {
-      case 'Point': return this.createMarker(place)
-      case 'Polygon': return this.createPolygon(place)
-      default: return this.createMarker(place)
-    }
-  }
-
-  createMarker(place) {
+  createMarker: function(place, index) {
     const coordinate = parseGeoJSONPoint(place.center)
+    const description = place.location && place.location.floor ? `Piso: ${place.location.floor}` : undefined
     return (
       <MapView.Marker
+        ref={place.identifier}
         key={place.identifier}
         coordinate={coordinate}
         title={place.shortName || place.name}
-        description={`Piso: ${(place.location && place.location.floor) ? place.location.floor : '?'}`}
+        description={description}
         pinColor={Colors.HIGH_CONTRAST}
         />
     )
-  }
+  },
 
-  createPolygon(place) {
+  createPolygon: function(place, index) {
     const polygon = place.polygon
     if (!polygon) return null
 
@@ -104,16 +102,16 @@ export default class EasyMap extends Component {
         strokeWidth={1}
       />
     )
-  }
+  },
 
-  animateToCoordinates(region) {
+  animateToCoordinates: function(region) {
     this.refs.maps.animateToCoordinate(region)
-  }
+  },
 
-  onRegionChangeComplete(region) {
+  onRegionChangeComplete: function(region) {
     // console.log(region)
-  }
-}
+  },
+})
 
 const styles = StyleSheet.create({
   maps: {

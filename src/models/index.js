@@ -3,6 +3,11 @@ import gju from 'geojson-utils'
 import { URL } from './settings'
 
 export class Entity {
+
+  get display() {
+    return this.shortName || this.name || this.identifier
+  }
+
   get center() {
     switch (this.location.type) {
       case 'Point': return this.location
@@ -60,7 +65,7 @@ export function fetchCampuses() {
 }
 
 export function fetchFacultiesAndBuildings(campus) {
-  return fetchChilds(campus, ...["faculty", "building", "school", "department"])
+  return fetchChilds(campus, ...['faculty', 'building', 'school', 'department'])
 }
 
 export function fetchChilds(place, ...categories) {
@@ -72,5 +77,5 @@ export function fetchChilds(place, ...categories) {
 }
 
 export function fetchClasrooms(place) {
-  return fetchChilds(place, ...["classroom", "lab", "auditorium"])
+  return fetchChilds(place, ...['classroom', 'lab', 'auditorium'])
 }

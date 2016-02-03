@@ -12,9 +12,9 @@ export default function Toolbar(props) {
       style={styles.toolbar}
       titleColor="white"
       navIcon={icon}
-      actions={[
+      actions={props.search ? [
         {title: 'Buscar', show: 'always'},
-      ]}
+      ] : []}
       onIconClicked={() => props.backButton ? Actions.pop() : undefined}
       onActionSelected={(position) => Actions.search()}
       {...props} />

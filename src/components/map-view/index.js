@@ -1,5 +1,7 @@
 import React, { StyleSheet, Text, View, Component, Dimensions, Platform, ToolbarAndroid } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import Subscribable from 'Subscribable'
+import TimerMixin from 'react-timer-mixin'
 
 import EasyMap from './map'
 import Footer from './footer'
@@ -10,27 +12,46 @@ import Colors from '../../global/colors'
 import { fetchChilds, fetchFacultiesAndBuildings } from '../../models'
 
 
-export default class MapsView extends Component {
-  constructor(props) {
-    super(props)
+export default React.createClass({
+  mixins: [Subscribable.Mixin, TimerMixin],
 
-    this.state = {
+  getInitialState: function() {
+    return {
       campus: this.props.campus,
       areas: this.props.areas || [],
       places: this.props.places || [],
       selected: 0,
     }
-    this.fetch()
-  }
+  },
 
-  fetch() {
+  componentDidMount: function() {
+    this.addListenerOn(this.props.searchEventEmitter, 'results', ({ found, query }) => {
+      this.setState({ places: found })
+      if (found.length) {
+        this.goToPlace(found[0])
+        // this.refs.footer.scrollToIndex(2)
+      }
+    });
+    this.addListenerOn(this.props.searchEventEmitter, 'modal', () => {
+      Actions.search({ area: this.state.campus })
+    });
+
+    if (this.state.areas.length) {
+      this.setTimeout(() => {
+        this.goToPlace(this.state.areas[0])
+      }, 1000);
+    }
+    this.fetch().done()
+  },
+
+  fetch: function() {
     return fetchFacultiesAndBuildings(this.props.campus)
       .then(areas => this.setState({ areas: areas, selected: 0 }))
-  }
+  },
 
-  render() {
+  render: function() {
     const campus = this.state.campus
-    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton title={campus.shortName || campus.name} onActionSelected={(_) => Actions.search({ parent: campus })} /> : undefined
+    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton search title={campus.shortName || campus.name} onActionSelected={(_) => Actions.search({ area: campus })} /> : undefined
 
     return (
       <View style={styles.container}>
@@ -46,37 +67,38 @@ export default class MapsView extends Component {
           />
 
         <Footer
+          ref="footer"
           style={styles.footer}
           areas={this.state.areas}
-          onAreaSelection={this.selectArea.bind(this)}
-          onShowClassrooms={this.showClassrooms.bind(this)}
-          onShowServices={this.showServices.bind(this)}
-          onShowDetails={this.showDetails.bind(this)}
+          onAreaSelection={this.selectArea}
+          onShowClassrooms={this.showClassrooms}
+          onShowServices={this.showServices}
+          onShowDetails={this.showDetails}
           />
 
       </View>
     )
-  }
+  },
 
-  goBack() {
+  goBack: function() {
     Actions.pop()
-  }
+  },
 
   // Map point
-  goToCoordinates(coordinates) {
+  goToCoordinates: function(coordinates) {
     this.refs.maps.animateToCoordinates(coordinates)
-  }
+  },
 
   // GeoJSON point
-  goToPoint(point) {
+  goToPoint: function(point) {
     this.goToCoordinates({
       latitude: point.coordinates[1],
       longitude: point.coordinates[0],
     })
-  }
+  },
 
   // API Entity
-  goToPlace(place) {
+  goToPlace: function(place) {
     if (place && place.location && place.location.coordinates) {
       const center = place.center
       if (center && center.coordinates && center.coordinates[0] && center.coordinates[1]) {
@@ -84,26 +106,32 @@ export default class MapsView extends Component {
       }
     }
     this.goToPoint(this.state.campus.center)
-  }
+  },
 
-  selectArea(area) {
+  selectArea: function(area) {
     this.goToPlace(area)
-  }
+  },
 
-  showDetails(area) {
+  showDetails: function(area) {
     Actions.detail({ area: area })
-  }
+  },
 
-  showClassrooms(area) {
-    const callback = (places) => this.setState({ places: places })
+  showClassrooms: function(area) {
+    const callback = (places) => {
+      this.setState({ places: places })
+      if (places.length) this.goToPlace(places[0])
+    }
     Actions.classrooms({ area: area, callback: callback })
-  }
+  },
 
-  showServices(area) {
-    const callback = (service) => this.setState({ places: service.places })
+  showServices: function(area) {
+    const callback = (service) => {
+      this.setState({ places: service.places })
+      this.goToPlace(area)
+    }
     Actions.services({ area: area, callback: callback })
-  }
-}
+  },
+})
 
 const margin = 10
 

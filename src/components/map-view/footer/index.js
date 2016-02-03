@@ -17,6 +17,7 @@ export default class Footer extends Component {
   static get defaultProps() {
     return {
       areas: [],
+      loop: false,
     }
   }
 
@@ -31,10 +32,11 @@ export default class Footer extends Component {
       <View style={styles.view.container}>
 
         <ViewPager
+          ref="pager"
           style={styles.swiper.container}
           dataSource={datasource}
           renderPage={this.renderPage.bind(this)}
-          isLoop={this.state.areas > 1}
+          isLoop={this.props.loop}
           onChangePage={this.selectArea.bind(this)}
           autoPlay={false}/>
 
@@ -57,6 +59,14 @@ export default class Footer extends Component {
         </View>
       </View>
     )
+  }
+
+  scrollToArea(area) {
+    this.scrollToIndex(this.props.areas.indexOf(area))
+  }
+
+  scrollToIndex(index) {
+    this.refs.pager.goToPage(index)
   }
 
   showDetails() {

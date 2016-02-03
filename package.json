@@ -31,6 +31,7 @@
     "url": "https://github.com/almapp/uc-maps-mobile/issues"
   },
   "dependencies": {
+    "full-text-search-light": "github:mrpatiwi/node-full-text-search-light",
     "geojson-utils": "^1.1.0",
     "react-native": "^0.19.0",
     "react-native-android-tablayout": "^0.1.0",
@@ -38,10 +39,12 @@
     "react-native-maps": "^0.3.0",
     "react-native-parallax": "^0.2.2",
     "react-native-router-flux": "github:aksonov/react-native-router-flux",
-    "react-native-tableview-simple": "^0.5.0",
+    "react-native-search-bar": "^2.8.0",
+    "react-native-tableview-simple": "^0.6.0",
     "react-native-tabs": "^0.1.10",
     "react-native-vector-icons": "^1.1.1",
-    "react-native-viewpager": "^0.2.1"
+    "react-native-viewpager": "^0.2.1",
+    "react-timer-mixin": "^0.13.3"
   },
   "devDependencies": {}
 }
