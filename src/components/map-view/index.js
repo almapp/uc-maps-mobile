@@ -28,7 +28,7 @@ export default React.createClass({
   componentDidMount: function() {
     // When search results arrive
     this.addListenerOn(this.props.searchEventEmitter, 'results', ({ found, query }) => {
-      this.setState({ places: found })
+      this.setState({ places: found, showingModal: false })
       if (found.length) {
         this.goToPlace(found[0])
         // this.refs.footer.scrollToIndex(2)
@@ -36,9 +36,7 @@ export default React.createClass({
     });
 
     // On search button press
-    this.addListenerOn(this.props.searchEventEmitter, 'modal', () => {
-      Actions.search({ area: this.state.campus })
-    });
+    this.addListenerOn(this.props.searchEventEmitter, 'modal', this.showSearch);
 
     // Focus on first area if present
     if (this.state.areas.length) {
@@ -52,6 +50,19 @@ export default React.createClass({
 
     // Add Android back button responder
     this.setupBackButton()
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    // Prevent only if showingModal changed
+    if (nextState.showingModal !== this.state.showingModal && nextState.places === this.state.places) {
+      return false
+    }
+    return true
+  },
+
+  showSearch: function() {
+    this.setState({ showingModal: true })
+    Actions.search({ area: this.state.campus })
   },
 
   setupBackButton: function() {
@@ -73,7 +84,7 @@ export default React.createClass({
 
   render: function() {
     const campus = this.state.campus
-    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton search title={campus.shortName || campus.name} onActionSelected={(_) => Actions.search({ area: campus })} /> : undefined
+    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton search title={campus.shortName || campus.name} onActionSelected={this.showSearch} /> : undefined
 
     return (
       <View style={styles.container}>

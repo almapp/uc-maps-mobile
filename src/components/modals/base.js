@@ -6,14 +6,12 @@ import Colors from '../../global/colors'
 
 
 export default class BaseModal extends Component {
+
   constructor(props) {
     super(props)
-    this.state = {
-      close: () => this.close(),
-    }
 
     if (Platform.OS !== 'ios') {
-      BackAndroid.addEventListener('hardwareBackPress', this.state.close)
+      BackAndroid.addEventListener('hardwareBackPress', this.close)
     }
   }
 
@@ -63,9 +61,14 @@ export default class BaseModal extends Component {
     )
   }
 
+  close() {
+    Actions.dismiss()
+    return true
+  }
+
   componentWillUnmount() {
     if (Platform.OS !== 'ios') {
-      BackAndroid.removeEventListener('hardwareBackPress', this.state.close)
+      BackAndroid.removeEventListener('hardwareBackPress', this.close)
     }
   }
 }

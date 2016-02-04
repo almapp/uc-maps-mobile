@@ -1,4 +1,4 @@
-import React, { View, Text, TextInput, Component, StyleSheet, ListView, ToolbarAndroid, Platform } from 'react-native'
+import React, { View, Text, TextInput, Component, StyleSheet, ListView, ToolbarAndroid, Platform, BackAndroid } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 import SearchBar from 'react-native-search-bar'
@@ -22,6 +22,11 @@ export default class SearchView extends Component {
       found: this.props.found || [],
       engine: new Fulltextsearchlight(),
     }
+
+    if (Platform.OS !== 'ios') {
+      BackAndroid.addEventListener('hardwareBackPress', Actions.pop)
+    }
+
     this.state.store.set(this.state.area._id, this.state.area)
     this.fetch().done()
   }
@@ -97,6 +102,18 @@ export default class SearchView extends Component {
 
         </View>
       )
+    }
+  }
+
+  componentDidMount() {
+    if (Platform.OS === 'ios') {
+      this.refs.searchBar.focus()
+    }
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS !== 'ios') {
+      BackAndroid.removeEventListener('hardwareBackPress', Actions.pop)
     }
   }
 
