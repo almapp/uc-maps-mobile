@@ -43,7 +43,7 @@ export default React.createClass({
     // Focus on first area if present
     if (this.state.areas.length) {
       this.setTimeout(() => {
-        this.goToPlace(this.state.areas[0])
+        if (this.state.areas.length) this.goToPlace(this.state.areas[0])
       }, 1000);
     }
 
@@ -153,8 +153,9 @@ export default React.createClass({
   showServices: function(area) {
     // Pass callback to update view
     const callback = (service) => {
-      this.setState({ places:( service ? service.places : []), showingModal: false })
-      this.goToPlace(area)
+      const places = service ? service.places : []
+      this.setState({ places: places, showingModal: false })
+      if (places.length) this.goToPlace(places[0])
     }
     this.setState({ showingModal: true })
     Actions.services({ area: area, callback: callback })

@@ -49,8 +49,10 @@ export default React.createClass({
 
     if (this.props.places.length) {
       this.setTimeout(() => {
-        const reference = this.refs[this.props.places[0].identifier]
-        if (reference) reference.showCallout()
+        if (this.props.places.length && this.props.places[0].identifier) {
+          const reference = this.refs[this.props.places[0].identifier]
+          if (reference) reference.showCallout()
+        }
       }, 700);
     }
 
