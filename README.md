@@ -8,6 +8,8 @@ Multi-platform mobile app built with [React Native](http://www.reactnative.com/)
 
 Client of [almapp/uc-maps](https://github.com/almapp/uc-maps)
 
+[![PlayStore][playstore-image]][playstore-url]
+
 ## Development
 
 Clone this repository:
@@ -99,7 +101,8 @@ app/build/outputs/apk/app-release.apk
 
 The final file should appear on the `Organizer`.
 
-
+[playstore-image]: http://mrpatiwi.github.io/app-badges/playstore.png
+[playstore-url]: https://play.google.com/store/apps/details?id=com.almapp.ucmaps
 [ci-image]: https://travis-ci.org/almapp/uc-maps-mobile.svg
 [ci-url]: https://travis-ci.org/almapp/uc-maps-mobile
 [dependencies-image]: https://david-dm.org/almapp/uc-maps-mobile.svg
