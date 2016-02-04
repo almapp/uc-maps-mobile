@@ -24,7 +24,7 @@ export default class SearchView extends Component {
     }
 
     if (Platform.OS !== 'ios') {
-      BackAndroid.addEventListener('hardwareBackPress', Actions.pop)
+      BackAndroid.addEventListener('hardwareBackPress', this.close)
     }
 
     this.state.store.set(this.state.area._id, this.state.area)
@@ -105,6 +105,11 @@ export default class SearchView extends Component {
     }
   }
 
+  close() {
+    Actions.pop()
+    return true
+  }
+
   componentDidMount() {
     if (Platform.OS === 'ios') {
       this.refs.searchBar.focus()
@@ -113,7 +118,7 @@ export default class SearchView extends Component {
 
   componentWillUnmount() {
     if (Platform.OS !== 'ios') {
-      BackAndroid.removeEventListener('hardwareBackPress', Actions.pop)
+      BackAndroid.removeEventListener('hardwareBackPress', this.close)
     }
   }
 
