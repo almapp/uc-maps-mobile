@@ -19,6 +19,8 @@ export default class PlacesList extends Component {
     return (
       <ListView
         style={this.props.style}
+        keyboardDismissMode="interactive"
+        showsVerticalScrollIndicator={true}
         dataSource={this.datasource.cloneWithRows(this.props.places)}
         renderRow={(place) => <Cell key={place.identifier} place={place} onSelection={this.props.onSelection}/>}
         renderSeparator={(section, row) => <View key={row} style={styles.separator}></View>}
