@@ -112,7 +112,7 @@ export default class SearchView extends Component {
     const prediction = this.state.engine.search(text)
     this.setState({
       query: text,
-      found: this.state.data.filter(e => prediction.includes(e.keyword)).map(e => e.place),
+      found: this.state.data.filter(e => prediction.indexOf(e.keyword) > 0).map(e => e.place),
     })
   }
 

@@ -31,7 +31,7 @@ export default class Cell extends Component {
     return (
       <View style={[styles.container, this.props.style]}>
 
-        <Icon name={this.icon(place)} size={25} style={styles.icon} />
+        <Icon name={this.getIcon(place)} size={25} style={styles.icon} />
 
         <Text style={[styles.title, touchable]}>
           {place.name || place.shortName} {annotation}
@@ -46,12 +46,9 @@ export default class Cell extends Component {
     )
   }
 
-  icon(place) {
-    for (let ancestor of place.ancestors.reverse()) {
-      const icon = PlaceIcons[ancestor.identifier]
-      if (icon) return icon
-    }
-    return 'location'
+  getIcon(place) {
+    const winner = place.ancestors.reverse().find(ancestor => ancestor && PlaceIcons[ancestor.identifier])
+    return winner ? PlaceIcons[winner.identifier] : 'location'
   }
 
   onPress() {

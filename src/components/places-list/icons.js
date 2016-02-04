@@ -1,4 +1,4 @@
-export default {
+const icons = {
   "SJ": null,
   "LC": null,
   "CC": null,
@@ -40,4 +40,6 @@ export default {
   "SOC": "people",
   "TTF": "egg",
   "TRSOC": "happy",
-};
+}
+
+export default icons
