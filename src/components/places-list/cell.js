@@ -2,7 +2,7 @@ import React, { View, Text, Component, StyleSheet, TouchableHighlight } from 're
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Colors from '../../global/colors'
-import PlaceIcons from './icons'
+import PlaceIcons from '../../global/icons'
 
 
 export default class Cell extends Component {
