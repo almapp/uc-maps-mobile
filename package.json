@@ -3,7 +3,7 @@
   "description": "Mobile app written with React Native",
   "homepage": "https://github.com/almapp/uc-maps-mobile#readme",
   "policy": "https://almapp.github.io/uc-maps-mobile/policy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
