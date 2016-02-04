@@ -62,9 +62,7 @@ export default React.createClass({
         style={styles.maps}
         initialRegion={this.state.initial}
         mapType={this.props.mapType}
-        showsCompass={false}
         showsPointsOfInterest={false}
-        showsTraffic={false}
         showsUserLocation={false}
         onRegionChangeComplete={this.onRegionChangeComplete}
         >
