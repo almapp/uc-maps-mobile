@@ -31,7 +31,7 @@ export default class InformationView extends Component {
           </Section>
           <Section header="Autor">
             <Cell cellstyle="Subtitle" title={this.props.author.name} detail={this.props.author.information} />
-            <Cell cellstyle="RightDetail" title="Email" detail={this.props.author.email} accessory="DisclosureIndicator" onPress={this.goToURL.bind(this, `mailto:this.props.author.email`)} />
+            <Cell cellstyle="RightDetail" title="Email" detail={this.props.author.email} accessory="DisclosureIndicator" onPress={this.goToURL.bind(this, `mailto:${this.props.author.email}`)} />
             <Cell cellstyle="RightDetail" title="URL" detail={this.props.author.url} accessory="DisclosureIndicator" onPress={this.goToURL.bind(this, this.props.author.url)} />
           </Section>
         </TableView>
