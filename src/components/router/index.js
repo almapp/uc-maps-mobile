@@ -8,7 +8,7 @@ import MapsView from '../map-view'
 import SearchView from '../search'
 import Main from '../main'
 import ClassroomModal from '../modals/classrooms'
-import ServicesModal from '../modals/services'
+import ServiceModal from '../modals/services'
 
 import Colors from '../../global/colors'
 
@@ -50,7 +50,7 @@ export default class AppRouter extends Component {
         <Route name="maps" schema="default" title="Mapa" component={MapsView} leftTitle={" "} {...search} />
 
         <Route name="classrooms" type="modal" component={ClassroomModal} />
-        <Route name="services" type="modal" component={ServicesModal} />
+        <Route name="services" type="modal" component={ServiceModal} />
       </Router>
     )
   }

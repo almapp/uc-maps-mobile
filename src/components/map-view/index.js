@@ -1,4 +1,4 @@
-import React, { StyleSheet, Text, View, Component, Dimensions, Platform, ToolbarAndroid } from 'react-native'
+import React, { StyleSheet, Text, View, Component, BackAndroid, Dimensions, Platform, ToolbarAndroid } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Subscribable from 'Subscribable'
 import TimerMixin from 'react-timer-mixin'
@@ -21,10 +21,12 @@ export default React.createClass({
       areas: this.props.areas || [],
       places: this.props.places || [],
       selected: 0,
+      showingModal: false,
     }
   },
 
   componentDidMount: function() {
+    // When search results arrive
     this.addListenerOn(this.props.searchEventEmitter, 'results', ({ found, query }) => {
       this.setState({ places: found })
       if (found.length) {
@@ -32,16 +34,36 @@ export default React.createClass({
         // this.refs.footer.scrollToIndex(2)
       }
     });
+
+    // On search button press
     this.addListenerOn(this.props.searchEventEmitter, 'modal', () => {
       Actions.search({ area: this.state.campus })
     });
 
+    // Focus on first area if present
     if (this.state.areas.length) {
       this.setTimeout(() => {
         this.goToPlace(this.state.areas[0])
       }, 1000);
     }
+
+    // Download new data
     this.fetch().done()
+
+    // Add Android back button responder
+    this.setupBackButton()
+  },
+
+  setupBackButton: function() {
+    if (Platform.OS !== 'ios') {
+      BackAndroid.addEventListener('hardwareBackPress', this.goBack)
+    }
+  },
+
+  removeBackButton: function() {
+    if (Platform.OS !== 'ios') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.goBack)
+    }
   },
 
   fetch: function() {
@@ -81,7 +103,8 @@ export default React.createClass({
   },
 
   goBack: function() {
-    Actions.pop()
+    if (!this.state.showingModal) Actions.pop()
+    return true
   },
 
   // Map point
@@ -99,6 +122,7 @@ export default React.createClass({
 
   // API Entity
   goToPlace: function(place) {
+    // TODO: improve conditions
     if (place && place.location && place.location.coordinates) {
       const center = place.center
       if (center && center.coordinates && center.coordinates[0] && center.coordinates[1]) {
@@ -117,23 +141,29 @@ export default React.createClass({
   },
 
   showClassrooms: function(area) {
+    // Pass callback to update view
     const callback = (places) => {
-      this.setState({ places: places })
+      this.setState({ places: places, showingModal: false })
       if (places.length) this.goToPlace(places[0])
     }
+    this.setState({ showingModal: true })
     Actions.classrooms({ area: area, callback: callback })
   },
 
   showServices: function(area) {
+    // Pass callback to update view
     const callback = (service) => {
-      this.setState({ places: service.places })
+      this.setState({ places:( service ? service.places : []), showingModal: false })
       this.goToPlace(area)
     }
+    this.setState({ showingModal: true })
     Actions.services({ area: area, callback: callback })
   },
-})
 
-const margin = 10
+  componentWillUnmount: function() {
+    this.removeBackButton()
+  },
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -144,7 +174,7 @@ const styles = StyleSheet.create({
     top: 20,
     left: 0,
     right: 0,
-    margin: margin,
+    margin: 10,
     height: 44,
     // maxWidth: 320,
   },

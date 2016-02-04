@@ -10,4 +10,5 @@ export default  {
   COMPLEMENT: FLAT_LIGHT_PURPLE,
   CONTRAST: FLAT_SAND,
   HIGH_CONTRAST: FLAT_RED,
+  DARK: 'rgba(53, 26, 133, 1.0)',
 }

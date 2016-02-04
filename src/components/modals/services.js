@@ -2,17 +2,17 @@ import React, { View, Text, Component, StyleSheet, ListView } from 'react-native
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 
-import { fetchChilds } from '../../../models'
-import Colors from '../../../global/colors'
-import Row from './row'
+import { Entity, fetchChilds } from '../../models'
+import Colors from '../../global/colors'
+import BaseModal from './base'
+import ModalCell from './cell'
 
-export default class ServicesModal extends Component {
+
+export default class ServiceModal extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      // Add 'places' array to each 'service'
-      services: this.props.services.map(s => Object.assign(s, { places: [] }))
+      services: this.props.services.map(s => Object.assign(s, { places: [] })),
     }
     this.fetch().done()
   }
@@ -23,12 +23,12 @@ export default class ServicesModal extends Component {
         { title: 'Baños hombre', icon: 'man', categories: ['bath_men'] },
         { title: 'Baños mujer', icon: 'woman', categories: ['bath_women'] },
         { title: 'Almuerzo', icon: 'pizza', categories: ['lunch'] },
-        { title: 'Máquina dispensadora de comida', icon: 'pizza', categories: ['food_dispenser'] },
+        { title: 'Máquinas de comida', icon: 'pizza', categories: ['food_dispenser'] },
         { title: 'Kiosko', icon: 'pizza', categories: ['snack', 'food_cart'] },
         { title: 'Basureros de reciclaje', icon: 'trash-a', categories: ['trash', 'recycle'] },
         { title: 'Cajeros', icon: 'card', categories: ['cash'] },
         { title: 'Banco', icon: 'card', categories: ['bank'] },
-        { title: 'Fotocopias', icon: 'printer', categories: ['photocopy'] },
+        { title: 'Fotocópias', icon: 'printer', categories: ['photocopy'] },
         { title: 'Computadores', icon: 'printer', categories: ['computers'] },
         { title: 'Laboratorios', icon: 'printer', categories: ['lab'] },
         { title: 'Biblioteca', icon: 'ios-bookmarks', categories: ['library'] },
@@ -67,91 +67,53 @@ export default class ServicesModal extends Component {
           })
         })
 
-        // Update view
+        // Update view with fetched and sorted services
         return this.setState({ services: this.state.services })
       })
   }
 
   get datasource() {
-    return new ListView.DataSource({ rowHasChanged: (r1, r2) => r1.places !== r2.places })
+    return new ListView.DataSource({ rowHasChanged: (r1, r2) => r1.places.length !== r2.places.length })
   }
 
   render() {
-    const services = this.state.services.sort((a, b) => {
-      a = a.places.length
-      b = b.places.length
-      if (a < b) return 1;
-      else if (a > b) return -1;
-      else return 0;
-    })
+    const services = this.state.services.filter(s => s.places.length > 0)
     const datasource = this.datasource.cloneWithRows(services)
 
     return (
-      <View style={styles.container}>
-        <View style={[styles.content, styles.shadow]}>
-          <ListView
-            style={{ marginTop: 12, marginBottom: 12 }}
-            dataSource={datasource}
-            renderRow={(service) => <Row service={service} onSelection={this.onSelection.bind(this)}/>}
-            />
-        </View>
-        <View style={[styles.buttons, styles.shadow]}>
-          <Button style={styles.close} onPress={this.close.bind(this)}>Cerrar</Button>
-        </View>
-      </View>
+      <BaseModal onClose={this.close.bind(this)}>
+        <ListView
+          style={styles.list}
+          dataSource={datasource}
+          renderRow={(service) => this.cell(service)}
+          />
+      </BaseModal>
+    )
+  }
+
+  cell(service) {
+    const enabled = service.places.length > 0
+    return (
+      <ModalCell title={service.title} subtitle={`Lugares: ${service.places.length}`} enabled={enabled} onSelection={this.onSelection.bind(this, service)} />
     )
   }
 
   onSelection(service) {
     Actions.dismiss()
     this.props.callback(service)
+    return true
   }
 
   close() {
-    Actions.dismiss()
+    return this.onSelection(null)
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(52,52,52,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  shadow: {
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowRadius: 2,
-    shadowColor: 'black',
-    shadowOpacity: 0.7,
-    elevation: 20,
-  },
-  content: {
-    width: 250,
-    height: 300,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    backgroundColor: 'white',
-  },
-  buttons: {
-    backgroundColor: 'white',
-    width: 250,
-    height: 40,
-    flexDirection: 'row',
-  },
-  close: {
-    // TODO: center vertically
-    height: 40,
-    width: 250,
-    color: 'white',
-    backgroundColor: Colors.COMPLEMENT,
-    paddingTop: 9,
+  list: {
+    marginTop: 12,
+    marginBottom: 6,
+    borderBottomColor: 'grey',
+    borderBottomWidth: 1,
   },
 })

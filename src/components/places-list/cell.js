@@ -9,8 +9,8 @@ export default class Cell extends Component {
 
   render() {
     const place = this.props.place
-    const enabled = this.props.place.hasPosition
-    const element = this.element(this.props.place, enabled)
+    const enabled = place.hasPosition
+    const element = this.element(place, enabled)
 
     if (enabled && this.props.onSelection) {
       return (
