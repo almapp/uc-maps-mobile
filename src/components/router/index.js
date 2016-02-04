@@ -32,6 +32,11 @@ export default class AppRouter extends Component {
       searchEventEmitter: this.props.searchEventEmitter,
     }
 
+    const noSwipe = {
+      FloatFromRight: Object.assign(Navigator.SceneConfigs.FloatFromRight, { gestures: null }),
+      FloatFromBottom: Object.assign(Navigator.SceneConfigs.FloatFromBottom, { gestures: null }),
+    }
+
     return (
       <Router
         hideNavBar={isAndroid}
@@ -40,8 +45,8 @@ export default class AppRouter extends Component {
         leftButtonTextStyle={styles.barButtonTextStyle}
         barButtonIconStyle={styles.barButtonIconStyle}>
 
-        <Schema name="modal" sceneConfig={isAndroid ? Navigator.SceneConfigs.FadeAndroid : Navigator.SceneConfigs.FloatFromBottom}/>
-        <Schema name="default" sceneConfig={isAndroid ? Navigator.SceneConfigs.FadeAndroid : Navigator.SceneConfigs.FloatFromRight}/>
+        <Schema name="modal" sceneConfig={isAndroid ? Navigator.SceneConfigs.FadeAndroid : noSwipe.FloatFromBottom} />
+        <Schema name="default" sceneConfig={isAndroid ? Navigator.SceneConfigs.FadeAndroid : noSwipe.FloatFromRight} />
         <Schema name="withoutAnimation"/>
 
         <Route name="main" schema="default" title="Mapas UC" component={Main} initial={true} />
