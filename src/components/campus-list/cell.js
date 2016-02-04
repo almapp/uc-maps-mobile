@@ -12,27 +12,12 @@ export default function Cell(props) {
       overlayStyle={styles.overlay}
       source={{uri: props.image}}>
 
-      <Text numberOfLines={2} style={styles.name}>{campus.name}</Text>
-      <Text numberOfLines={2} style={styles.address}>{campus.address}</Text>
+      <Text numberOfLines={2} style={[styles.name, styles.text]}>{campus.name}</Text>
+      <Text numberOfLines={2} style={[styles.address, styles.text]}>{campus.address}</Text>
       <Icon name="chevron-right" style={styles.disclosure} />
 
     </Parallax.Image>
   )
-}
-
-const text = {
-  color: 'white',
-  textAlign: 'center',
-  marginLeft: 25,
-  marginRight: 25,
-  marginBottom: 2,
-  shadowOffset: {
-    width: 0,
-    height: 0,
-  },
-  shadowRadius: 1,
-  shadowColor: 'black',
-  shadowOpacity: 0.8,
 }
 
 const styles = StyleSheet.create({
@@ -49,16 +34,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
+  text: {
+    color: 'white',
+    textAlign: 'center',
+    marginLeft: 25,
+    marginRight: 25,
+    marginBottom: 2,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowRadius: 1,
+    shadowColor: 'black',
+    shadowOpacity: 0.8,
+  },
   name: {
     fontSize: 20,
     lineHeight: 25,
     fontWeight: 'bold',
-    ...text,
   },
   address: {
     fontWeight: '100',
     fontSize: 12,
-    ...text,
   },
   disclosure: {
     position: 'absolute',

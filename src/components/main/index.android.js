@@ -19,9 +19,9 @@ export default class Main extends Component {
 
   view() {
     if (this.state.selected === 0) {
-      return <CampusList></CampusList>
+      return (<CampusList />)
     } else {
-      return <InformationView></InformationView>
+      return (<InformationView />)
     }
   }
 

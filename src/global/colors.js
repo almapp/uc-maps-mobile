@@ -5,10 +5,12 @@ const FLAT_LIGHT_PURPLE = 'rgba(115, 91, 204, 1.0)'
 const FLAT_YELLOW = 'rgba(253, 207, 0, 1.0)'
 const FLAT_RED = 'rgba(226, 78, 53, 1.0)'
 
-export default  {
+const Colors = {
   MAIN: FLAT_PURPLE,
   COMPLEMENT: FLAT_LIGHT_PURPLE,
   CONTRAST: FLAT_SAND,
   HIGH_CONTRAST: FLAT_RED,
   DARK: 'rgba(53, 26, 133, 1.0)',
 }
+
+export default Colors
