@@ -148,7 +148,7 @@ export default React.createClass({
   },
 
   showDetails: function(area) {
-    Actions.detail({ area: area })
+    Actions.detail({ place: area })
   },
 
   showClassrooms: function(area) {
