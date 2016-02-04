@@ -41,6 +41,8 @@ To run on Android, first you need a valid Google Maps API Key. Then put it in `a
   android:value="API_KEY"/>
 ```
 
+> The current API KEY only works on signed `com.almapp.ucmaps` apps.
+
 ### Run
 
 Start the development server with:
@@ -60,6 +62,43 @@ To run on an iOS emulator:
 ```sh
 npm run ios
 ```
+
+### Releasing
+
+Follow this steps to publish the app:
+
+#### Android
+
+> https://facebook.github.io/react-native/docs/signed-apk-android.html
+
+Set the API KEY and then run:
+
+```sh
+cd android
+./gradlew assembleRelease
+```
+
+Test on device with:
+
+```sh
+./gradlew installRelease
+```
+
+The signed `.apk` is located in:
+
+```sh
+app/build/outputs/apk/app-release.apk
+```
+
+#### iOS
+
+0. Open `ios/UCMaps.xcodeproj` with XCode.
+0. Uncomment `jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];`
+0. Select `Generic iOS Device`
+0. Go to `Product -> Archive`
+
+The final file should appear on the `Organizer`.
+
 
 [ci-image]: https://travis-ci.org/almapp/uc-maps-mobile.svg
 [ci-url]: https://travis-ci.org/almapp/uc-maps-mobile
