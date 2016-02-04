@@ -14,9 +14,6 @@ import Colors from '../../global/colors'
 
 
 export default class AppRouter extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   static get defaultProps() {
     return {
