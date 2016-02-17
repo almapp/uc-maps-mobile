@@ -4,12 +4,12 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
-// See: https://github.com/lelandrichardson/react-native-maps/issues/21#issuecomment-174290246
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.AirMaps.AirPackage;
+import com.xebia.reactnative.TabLayoutPackage;
 
 import java.util.Arrays;
 import java.util.List;
-import com.xebia.reactnative.TabLayoutPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -39,6 +39,7 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new VectorIconsPackage(),
             new AirPackage(),
             new TabLayoutPackage()
         );
