@@ -1,5 +1,4 @@
-import React, { ScrollView, Component, StyleSheet, Text, View, LinkingIOS, IntentAndroid, Platform } from 'react-native';
-// TODO: use Linking
+import React, { ScrollView, Component, StyleSheet, Text, View, Linking, Platform } from 'react-native'
 import {TableView, Section, Cell} from 'react-native-tableview-simple'
 
 
@@ -40,13 +39,8 @@ export default class InformationView extends Component {
   }
 
   goToURL(url) {
-    // TODO: use Linking
-    // Linking.openURL(url).catch(err => console.error('An error occurred', err));
-    if (Platform.OS === 'ios') {
-      LinkingIOS.openURL(url)
-    } else {
-      IntentAndroid.openURL(url)
-    }
+    Linking.openURL(url)
+      .catch(err => console.error('An error occurred', err));
   }
 }
 
