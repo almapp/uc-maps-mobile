@@ -1,5 +1,6 @@
 import React, { View, Text, Component, StyleSheet, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import renderIf from '../../util/render-if'
 
 import Colors from '../../global/colors'
 import PlaceIcons from '../../global/icons'

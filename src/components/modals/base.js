@@ -1,6 +1,7 @@
 import React, { View, Text, Component, StyleSheet, TouchableHighlight, ListView, BackAndroid, Platform } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
+import renderIf from '../../util/render-if'
 
 import Colors from '../../global/colors'
 

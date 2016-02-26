@@ -1,6 +1,7 @@
 import React, { View, Text, Component, StyleSheet, ToolbarAndroid } from 'react-native'
 import { Tab, TabLayout } from 'react-native-android-tablayout'
 import { Actions } from 'react-native-router-flux'
+import renderIf from '../../util/render-if'
 
 import Toolbar from '../toolbar'
 import CampusList from '../campus-list'
@@ -14,14 +15,6 @@ export default class Main extends Component {
     super(props)
     this.state = {
       selected: 0,
-    }
-  }
-
-  view() {
-    if (this.state.selected === 0) {
-      return (<CampusList />)
-    } else {
-      return (<InformationView />)
     }
   }
 
@@ -42,7 +35,12 @@ export default class Main extends Component {
 
         </TabLayout>
 
-        {this.view()}
+        {renderIf(this.state.selected === 0)(
+          <CampusList /
+        )}
+        {renderIf(this.state.selected === 1)(
+          <InformationView /
+        )}
 
       </View>
     )

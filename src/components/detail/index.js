@@ -1,5 +1,6 @@
 import React, { View, Text, Component, StyleSheet, Platform } from 'react-native'
 import {Actions} from 'react-native-router-flux'
+import renderIf from '../../util/render-if'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import Toolbar from '../toolbar'

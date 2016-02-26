@@ -2,6 +2,7 @@ import React, { StyleSheet, Text, View, Component, BackAndroid, Dimensions, Plat
 import { Actions } from 'react-native-router-flux'
 import Subscribable from 'Subscribable'
 import TimerMixin from 'react-timer-mixin'
+import renderIf from '../../util/render-if'
 
 import EasyMap from './map'
 import Footer from './footer'
