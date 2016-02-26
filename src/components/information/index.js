@@ -3,7 +3,6 @@ import {TableView, Section, Cell} from 'react-native-tableview-simple'
 
 
 export default class InformationView extends Component {
-
   static get defaultProps() {
     const meta = require('../../../package.json')
     return {
@@ -40,7 +39,7 @@ export default class InformationView extends Component {
 
   goToURL(url) {
     Linking.openURL(url)
-      .catch(err => console.error('An error occurred', err));
+      .catch(err => console.error('An error occurred', err))
   }
 }
 
@@ -53,4 +52,4 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
   },
-});
+})

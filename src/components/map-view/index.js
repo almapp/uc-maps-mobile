@@ -10,7 +10,9 @@ import Header from './header'
 import Toolbar from '../toolbar'
 import Colors from '../../global/colors'
 
-import { fetchChilds, fetchFacultiesAndBuildings } from '../../models'
+import realm, { Place } from '../../realm'
+import { PlacesFetcher } from '../../fetcher'
+import * as R from '../../util/realm-patch'
 
 
 export default React.createClass({
@@ -19,9 +21,8 @@ export default React.createClass({
   getInitialState: function() {
     return {
       campus: this.props.campus,
-      areas: this.props.areas || [],
+      areas: this.load(),
       places: this.props.places || [],
-      selected: 0,
       showingModal: false,
     }
   },
@@ -34,16 +35,16 @@ export default React.createClass({
         this.goToPlace(found[0])
         // this.refs.footer.scrollToIndex(2)
       }
-    });
+    })
 
     // On search button press
-    this.addListenerOn(this.props.searchEventEmitter, 'modal', this.showSearch);
+    this.addListenerOn(this.props.searchEventEmitter, 'modal', this.showSearch)
 
     // Focus on first area if present
     if (this.state.areas.length) {
       this.setTimeout(() => {
         if (this.state.areas.length) this.goToPlace(this.state.areas[0])
-      }, 1000);
+      }, 1000)
     }
 
     // Download new data
@@ -78,13 +79,24 @@ export default React.createClass({
     }
   },
 
+  load: function() {
+    const categories = ['faculty', 'building', 'school', 'department']
+    const query = categories.map(cat => `categories CONTAINS "${cat}"`).join(' OR ')
+    return realm.objects('Place').filtered(query)
+  },
+
   fetch: function() {
-    return fetchFacultiesAndBuildings(this.props.campus)
-      .then(areas => this.setState({ areas: areas, selected: 0 }))
+    const query = { categories: ['faculty', 'building', 'school', 'department'] }
+    return PlacesFetcher.childs(this.props.campus, query)
+      .then(areas => realm.write(() => {
+        areas.forEach(area => realm.create('Place', area, true))
+      }))
+      .then(() => this.forceUpdate())
   },
 
   render: function() {
     const campus = this.state.campus
+    const areas = R.toArray(this.state.areas)
     return (
       <View style={styles.container}>
 
@@ -96,14 +108,14 @@ export default React.createClass({
           ref="maps"
           style={styles.map}
           initial={campus}
-          areas={this.state.areas}
+          areas={areas}
           places={this.state.places}
           />
 
         <Footer
           ref="footer"
           style={styles.footer}
-          areas={this.state.areas}
+          areas={areas}
           onAreaSelection={this.selectArea}
           onShowClassrooms={this.showClassrooms}
           onShowServices={this.showServices}

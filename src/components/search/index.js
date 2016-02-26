@@ -2,7 +2,7 @@ import React, { View, Text, TextInput, Component, StyleSheet, ListView, ToolbarA
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 import SearchBar from 'react-native-search-bar'
-import Fulltextsearchlight from 'full-text-search-light'
+import fuzzy from 'fuzzy'
 
 import Colors from '../../global/colors'
 import { Entity, fetchChilds } from '../../models'
@@ -20,7 +20,6 @@ export default class SearchView extends Component {
       store: new Map(),
       data: [],
       found: this.props.found || [],
-      engine: new Fulltextsearchlight(),
     }
 
     if (Platform.OS !== 'ios') {
@@ -39,7 +38,6 @@ export default class SearchView extends Component {
           keyword: place.shortName || place.name,
         }
         this.state.store.set(place._id, place)
-        this.state.engine.add(entity.keyword)
         return entity
       })
       places.forEach(place => {
@@ -131,7 +129,7 @@ export default class SearchView extends Component {
   }
 
   onChangeText(text) {
-    const prediction = this.state.engine.search(text)
+    const prediction = fuzzy.filter(text, this.state.data.map(d => d.keyword))
     this.setState({
       query: text,
       found: this.state.data.filter(e => prediction.indexOf(e.keyword) > 0).map(e => e.place),
