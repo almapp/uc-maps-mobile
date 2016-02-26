@@ -85,12 +85,12 @@ export default React.createClass({
 
   render: function() {
     const campus = this.state.campus
-    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton search title={campus.shortName || campus.name} onActionSelected={this.showSearch} /> : undefined
-
     return (
       <View style={styles.container}>
 
-        {toolbar}
+        {renderIf(Platform.OS !== 'ios')(
+          <Toolbar backButton search title={campus.shortName || campus.name} onActionSelected={this.showSearch} />
+        )}
 
         <EasyMap
           ref="maps"

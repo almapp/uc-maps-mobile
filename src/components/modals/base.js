@@ -27,8 +27,12 @@ export default class BaseModal extends Component {
           {this.props.children}
 
           <View style={styles.buttons}>
-            {close}
-            {all}
+            {renderIf(this.props.onClose)(
+              this.closeButton
+            )}
+            {renderIf(this.props.onAll)(
+              this.allButton
+            )}
           </View>
 
         </View>

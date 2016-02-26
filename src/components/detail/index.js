@@ -11,10 +11,11 @@ export default class DetailView extends Component {
 
   render() {
     const place = this.props.place
-    const toolbar = (Platform.OS !== 'ios') ? <Toolbar backButton title="Detalle" actions={[]} /> : undefined
     return (
       <View style={[styles.container, this.props.style]}>
-        {toolbar}
+        {renderIf(Platform.OS !== 'ios')(
+          <Toolbar backButton title="Detalle" actions={[]} />
+        )}
         <Text>{place.display}</Text>
       </View>
     )
