@@ -45,8 +45,8 @@ export default React.createClass({
   },
 
   render: function() {
-    const polygons = this.props.areas.map(this.createPolygon).filter(p => p !== null)
-    const markers = this.props.places.map(this.createMarker).filter(p => p !== null)
+    const polygons = this.props.areas.map(this.createPolygon)
+    const markers = this.props.places.map(this.createMarker)
 
     if (this.props.places.length) {
       this.setTimeout(() => {

@@ -9,14 +9,14 @@ export const PlacesParser = {
         address: json.address,
         information: json.information,
         parentId: json.parent,
-        ancestorsId: JSON.stringify(json.ancestors),
-        categories: JSON.stringify(json.categories),
-        contact: {
+        _ancestorsId: JSON.stringify(json.ancestors),
+        _categories: JSON.stringify(json.categories),
+        _location: JSON.stringify(json.location),
+        _contact: {
           urls: json.contact && json.contact.urls ? JSON.stringify(json.contact.urls) : undefined,
           emails: json.contact && json.contact.emails ? JSON.stringify(json.contact.emails) : undefined,
           phones: json.contact && json.contact.phones ? JSON.stringify(json.contact.phones) : undefined,
         },
-        location: JSON.stringify(json.location),
         // location: {
         //   type: json.location.type,
         //   floor: json.location.floor,
@@ -34,7 +34,6 @@ export const PlacesParser = {
       //   })
       //   break
       // }
-      debugger
       return place
     })
   },

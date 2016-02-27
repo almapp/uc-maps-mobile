@@ -61,46 +61,21 @@ export class Place {
   }
 
   get center() {
-    switch (this.location.type) {
-    case 'Point': return this.location
-    case 'Polygon': return gju.centroid(this.location)
+    const location = this.location
+    switch (location.type) {
+    case 'Point': return location
+    case 'Polygon': return gju.centroid(location)
     default: return null
     }
   }
 
-  /**
-   * Return GeoJSON 'Polygon' object
-   */
-  get geoJSONPolygon() {
-    if (!this.location || this.location.type !== 'Polygon') return null
-    else return {
-      type: 'Polygon',
-      coordinates: this.location.polygon.rings.map(ring => {
-        return ring.points.map(point => [point.longitude, point.latitude])
-      }),
-    }
-  }
-
-  /**
-   * Return GeoJSON 'Point' object
-   */
-  get geoJSONPoint() {
-    if (!this.location || this.location.type !== 'Point') return null
-    else return {
-      type: 'Point',
-      coordinates: [this.location.point.longitude, this.location.point.latitude],
-    }
-  }
-
-  /**
-   * Return GeoJSON 'Point' object
-   */
-  get geoJSONCenter() {
-    switch (this.location.type) {
-    case 'Point': return this.geoJSONPoint
-    case 'Polygon': return gju.centroid(this.geoJSONPolygon)
-    default: return null
-    }
+  get polygon() {
+    if (this.location.type !== 'Polygon') return null
+    if (this.location.coordinates.length < 1) return null
+    return this.location.coordinates[0].map(coord => ({
+      latitude: coord[1],
+      longitude: coord[0],
+    }))
   }
 }
 
@@ -116,6 +91,7 @@ Place.schema = {
     information: { type: 'string', optional: true },
     // location: { type: 'Location', optional: true },
     parentId: { type: 'string', optional: true },
+    _contact: { type: 'Contact', optional: true },
     _location: { type: 'string', optional: true },
     _categories: { type: 'string', default: '[]' },
     _ancestorsId: { type: 'string', default: '[]' },
@@ -127,8 +103,8 @@ export default new Realm({
     Place,
     ContactSchema,
     // LocationSchema,
-    PolygonSchema,
-    MultiPointSchema,
-    PointSchema,
+    // PolygonSchema,
+    // MultiPointSchema,
+    // PointSchema,
   ],
 })

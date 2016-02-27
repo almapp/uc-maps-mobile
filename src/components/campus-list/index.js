@@ -21,7 +21,7 @@ export default class CampusList extends Component {
   }
 
   load() {
-    return realm.objects('Place') //.filtered('categories CONTAINS "campus"')
+    return realm.objects('Place').filtered('_categories CONTAINS "campus"')
   }
 
   fetch() {

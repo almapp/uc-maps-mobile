@@ -81,7 +81,7 @@ export default React.createClass({
 
   load: function() {
     const categories = ['faculty', 'building', 'school', 'department']
-    const query = categories.map(cat => `categories CONTAINS "${cat}"`).join(' OR ')
+    const query = categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR ')
     return realm.objects('Place').filtered(query)
   },
 
@@ -101,7 +101,7 @@ export default React.createClass({
       <View style={styles.container}>
 
         {renderIf(Platform.OS !== 'ios')(
-          <Toolbar backButton search title={campus.shortName || campus.name} onActionSelected={this.showSearch} />
+          <Toolbar backButton search title={campus.display} onActionSelected={this.showSearch} />
         )}
 
         <EasyMap
