@@ -1,12 +1,14 @@
-import React, { View, Text, TextInput, Component, StyleSheet, ListView, ToolbarAndroid, Platform, BackAndroid } from 'react-native'
+import React, { View, Text, TextInput, Component, StyleSheet, ToolbarAndroid, Platform, BackAndroid } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 import SearchBar from 'react-native-search-bar'
-import fuzzy from 'fuzzy'
+import renderIf from '../../util/render-if'
+
+import realm, { Place } from '../../realm'
+import { PlacesFetcher } from '../../fetcher'
+import * as R from '../../util/realm-patch'
 
 import Colors from '../../global/colors'
-import { Entity, fetchChilds } from '../../models'
-
 import PlacesList from '../places-list'
 
 
@@ -15,86 +17,70 @@ export default class SearchView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      query: this.props.query || '',
-      found: [],
+      query: this.props.query,
+      found: this.search(this.props.query),
     }
 
     if (Platform.OS !== 'ios') {
       BackAndroid.addEventListener('hardwareBackPress', this.close)
     }
 
-    this.state.store.set(this.state.area._id, this.state.area)
     this.fetch().done()
   }
 
   static get defaultProps() {
     return {
+      query: '',
       categories: null,
       sorted: ['_categories', 'identifier'],
       searchFields: ['name', 'shortName'],
     }
   }
 
-  search(text = null) {
+  search(text) {
     let builder = realm.objects('Place')
-    if (this.props.area) builder = builder.filtered(`_ancestorsId CONTAINS "${this.props.area.id}"`)
+    if (this.props.area) builder = builder.filtered('_ancestorsId CONTAINS $0', this.props.area.id)
     if (this.props.categories) builder = builder.filtered(this.props.categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
-    if (this.props.sorted) builder = builder.sorted(this.props.sorted)
     if (text) builder = builder.filtered(this.props.searchFields.map(prop => `${prop} CONTAINS "${text}"`).join(' OR '))
+    if (this.props.sorted) builder = builder.sorted(this.props.sorted)
     return builder.snapshot()
   }
 
   fetch() {
-    return fetchChilds(this.props.area, ...['classroom', 'faculty', 'building', 'lab']).then(places => {
-      const data = places.map(place => {
-        const entity = {
-          place: place,
-          keyword: place.shortName || place.name,
-        }
-        this.state.store.set(place._id, place)
-        return entity
-      })
-      places.forEach(place => {
-        place.ancestors = (place.ancestors || []).map(id => this.state.store.get(id))
-      })
-      return this.setState({ data: data })
-    })
+    return PlacesFetcher.childs(this.props.area)
+      .then(places => realm.write(() => {
+        places.forEach(place => realm.create('Place', place, true))
+      }))
+      .then(() => this.setState({ found: this.search(this.state.query) }))
   }
 
   placeholder(area) {
-    return area ? `Sala, edificio o campus en ${area.shortName || area.name}` : 'Sala, edificio o campus'
+    return area ? `Sala, edificio o campus en ${area.display}` : 'Sala, edificio o campus'
   }
 
   render() {
-    const places = this.state.query.length ? this.state.found : this.state.data.map(d => d.place)
-    if (Platform.OS === 'ios') {
-      return (
-        <View style={styles.container}>
+    return (
+      <View style={styles.container}>
+
+        {renderIf(Platform.OS === 'ios')(
           <SearchBar
             style={styles.searchBar}
             ref='searchBar'
             tintColor={Colors.MAIN}
             hideBackground={false}
-            placeholder={this.placeholder(this.state.area)}
+            placeholder={this.placeholder(this.props.area)}
             onChangeText={this.onChangeText.bind(this)}
             onSearchButtonPress={this.onInput.bind(this)}
             />
+        )}
 
-          <PlacesList places={places} onSelection={this.onSelection.bind(this)}/>
-
-        </View>
-      )
-    } else {
-      const icon = require('../toolbar/img/back.png')
-      return (
-        <View style={{ flex: 1 }}>
+        {renderIf(Platform.OS !== 'ios')(
           <ToolbarAndroid
             style={styles.toolbar}
             titleColor="white"
-            navIcon={icon}
+            navIcon={require('../toolbar/img/back.png')}
             onIconClicked={() => Actions.pop()}
             >
-
             <TextInput
               style={{ height: 56, fontSize: 15 }}
               autoCorrect={false}
@@ -104,17 +90,16 @@ export default class SearchView extends Component {
               underlineColorAndroid={Colors.COMPLEMENT}
               color="white"
               defaultValue={this.state.query}
-              placeholder={this.placeholder(this.state.area)}
+              placeholder={this.placeholder(this.props.area)}
               placeholderTextColor="white"
               />
-
           </ToolbarAndroid>
+        )}
 
-          <PlacesList places={places} onSelection={this.onSelection.bind(this)}/>
+        <PlacesList places={this.state.found} onSelection={this.onSelection.bind(this)}/>
 
-        </View>
-      )
-    }
+      </View>
+    )
   }
 
   close() {
@@ -143,11 +128,7 @@ export default class SearchView extends Component {
   }
 
   onChangeText(text) {
-    const prediction = fuzzy.filter(text, this.state.data.map(d => d.keyword))
-    this.setState({
-      query: text,
-      found: this.state.data.filter(e => prediction.indexOf(e.keyword) > 0).map(e => e.place),
-    })
+    this.setState({ found: this.search(text) })
   }
 
   onInput(text) {
@@ -162,7 +143,7 @@ export default class SearchView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 64,
+    paddingTop: Platform.OS === 'ios' ? 64 : 0,
   },
   searchBar: {
     height: 44,

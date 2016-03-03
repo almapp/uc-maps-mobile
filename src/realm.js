@@ -84,6 +84,10 @@ export class Place {
     else if (a.identifier > b.identifier) return 1
     else return 0
   }
+
+  get hasPosition() {
+    return this.location !== null
+  }
 }
 
 Place.schema = {

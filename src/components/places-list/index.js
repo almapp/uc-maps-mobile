@@ -1,4 +1,5 @@
-import React, { View, Text, Component, StyleSheet, ListView } from 'react-native'
+import React, { View, Text, Component, StyleSheet } from 'react-native'
+import { ListView } from 'realm/react-native'
 
 import Colors from '../../global/colors'
 import Cell from './cell'

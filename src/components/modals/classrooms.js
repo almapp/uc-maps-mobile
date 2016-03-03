@@ -1,10 +1,10 @@
-import React, { View, Text, Component, StyleSheet, ListView } from 'react-native'
+import React, { View, Text, Component, StyleSheet } from 'react-native'
+import { ListView } from 'realm/react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 
 import realm, { Place } from '../../realm'
 import { PlacesFetcher } from '../../fetcher'
-import * as R from '../../util/realm-patch'
 
 import Colors from '../../global/colors'
 import BaseModal from './base'
@@ -23,7 +23,7 @@ export default class ClassroomModal extends Component {
   load() {
     const categories = ['classroom', 'lab', 'auditorium']
     return realm.objects('Place')
-      .filtered(`_ancestorsId CONTAINS "${this.props.area.id}"`)
+      .filtered('_ancestorsId CONTAINS $0', this.props.area.id)
       .filtered(categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
       .sorted('identifier')
       .snapshot()
@@ -42,13 +42,11 @@ export default class ClassroomModal extends Component {
   }
 
   render() {
-    const places = this.state.places // R.toArray(this.state.places) //.sort(Place.compare)
-
     return (
       <BaseModal onAll={this.all.bind(this)} onClose={this.close.bind(this)}>
         <ListView
           style={styles.list}
-          dataSource={this.datasource.cloneWithRows(places)}
+          dataSource={this.datasource.cloneWithRows(this.state.places)}
           showsVerticalScrollIndicator={true}
           renderRow={(place) => this.cell(place)}
           />

@@ -1,11 +1,11 @@
-import React, { View, Text, Component, StyleSheet, ListView } from 'react-native'
+import React, { View, Text, Component, StyleSheet } from 'react-native'
+import { ListView } from 'realm/react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 import sortBy from 'sort-by'
 
 import realm, { Place } from '../../realm'
 import { PlacesFetcher } from '../../fetcher'
-import * as R from '../../util/realm-patch'
 
 import Colors from '../../global/colors'
 import BaseModal from './base'
@@ -49,7 +49,7 @@ export default class ServiceModal extends Component {
 
   load(categories) {
     return realm.objects('Place')
-      .filtered(`_ancestorsId CONTAINS "${this.props.area.id}"`)
+      .filtered('_ancestorsId CONTAINS $0', this.props.area.id)
       .filtered(categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
       .sorted('identifier')
       .snapshot()

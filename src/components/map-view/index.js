@@ -81,7 +81,7 @@ export default React.createClass({
   load: function() {
     const categories = ['faculty', 'building', 'school', 'department']
     return realm.objects('Place')
-      .filtered(`_ancestorsId CONTAINS "${this.props.campus.id}"`)
+      .filtered('_ancestorsId CONTAINS $0', this.props.campus.id)
       .filtered(categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
       .sorted('shortName')
       .snapshot()
