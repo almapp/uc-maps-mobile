@@ -32,7 +32,7 @@ export default class SearchView extends Component {
     return {
       query: '',
       categories: null,
-      sorted: ['_categories', 'identifier'],
+      sorted: ['parentId', 'identifier'],
       searchFields: ['name', 'shortName'],
     }
   }

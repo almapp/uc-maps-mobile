@@ -10,7 +10,8 @@ export const PlacesFetcher = {
       .then(json => PlacesParser.fromJSON(...json))
   },
   childs: function(place, query) {
-    return this.places(`places/${place.id}/childs`, query)
+    const path = place ? `places/${place.id}/childs` : 'places'
+    return this.places(path, query)
   },
   all: function() {
     return this.places('places')
