@@ -2,7 +2,10 @@ import React, { View, Text, Component, StyleSheet, ListView } from 'react-native
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 
-import { Entity, fetchClasrooms } from '../../models'
+import realm, { Place } from '../../realm'
+import { PlacesFetcher } from '../../fetcher'
+import * as R from '../../util/realm-patch'
+
 import Colors from '../../global/colors'
 import BaseModal from './base'
 import ModalCell from './cell'
@@ -12,14 +15,26 @@ export default class ClassroomModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      places: this.props.places || [],
+      places: this.load(),
     }
     this.fetch().done()
   }
 
+  load() {
+    const categories = ['classroom', 'lab', 'auditorium']
+    return realm.objects('Place')
+      .filtered(`_ancestorsId CONTAINS "${this.props.area.id}"`)
+      .filtered(categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
+      .sorted('identifier')
+      .snapshot()
+  }
+
   fetch() {
-    return fetchClasrooms(this.props.area)
-      .then(places => this.setState({ places: places }))
+    return PlacesFetcher.classrooms(this.props.area)
+      .then(places => realm.write(() => {
+        places.forEach(place => realm.create('Place', place, true))
+      }))
+      .then(() => this.setState({ places: this.load() }))
   }
 
   get datasource() {
@@ -27,14 +42,13 @@ export default class ClassroomModal extends Component {
   }
 
   render() {
-    const places = this.state.places.sort(Entity.compare)
-    const datasource = this.datasource.cloneWithRows(places)
+    const places = this.state.places // R.toArray(this.state.places) //.sort(Place.compare)
 
     return (
       <BaseModal onAll={this.all.bind(this)} onClose={this.close.bind(this)}>
         <ListView
           style={styles.list}
-          dataSource={datasource}
+          dataSource={this.datasource.cloneWithRows(places)}
           showsVerticalScrollIndicator={true}
           renderRow={(place) => this.cell(place)}
           />

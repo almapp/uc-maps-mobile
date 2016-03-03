@@ -21,7 +21,7 @@ export default class CampusList extends Component {
   }
 
   load() {
-    return realm.objects('Place').filtered('_categories CONTAINS "campus"')
+    return realm.objects('Place').filtered('_categories CONTAINS "campus"').snapshot()
   }
 
   fetch() {
@@ -29,10 +29,10 @@ export default class CampusList extends Component {
       .then(places => realm.write(() => {
         places.forEach(place => realm.create('Place', place, true))
       }))
-      .then(() => this.forceUpdate())
+      .then(() => this.setState({ campuses: this.load() }))
   }
 
-  getImage(campus) {
+  getCampusImage(campus) {
     return `https://almapp.github.io/uc-maps-assets/images/campuses/${campus.identifier}.jpg`
   }
 
@@ -43,7 +43,7 @@ export default class CampusList extends Component {
         <Parallax.ScrollView style={styles.scrollView}>
 
           {campuses.map((campus, i) => (
-            <Cell key={i} campus={campus} image={this.getImage(campus)} onCampusSelect={this.selectCampus.bind(this, campus)}/>
+            <Cell key={i} campus={campus} image={this.getCampusImage(campus)} onCampusSelect={this.selectCampus.bind(this, campus)}/>
           ))}
 
         </Parallax.ScrollView>

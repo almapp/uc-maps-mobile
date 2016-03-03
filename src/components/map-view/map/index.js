@@ -64,7 +64,7 @@ export default React.createClass({
         initialRegion={this.state.initial}
         mapType={this.props.mapType}
         showsPointsOfInterest={false}
-        showsUserLocation={false}
+        showsUserLocation={true}
         onRegionChangeComplete={this.onRegionChangeComplete}
         >
 

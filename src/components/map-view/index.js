@@ -20,7 +20,6 @@ export default React.createClass({
 
   getInitialState: function() {
     return {
-      campus: this.props.campus,
       areas: this.load(),
       places: this.props.places || [],
       showingModal: false,
@@ -64,7 +63,7 @@ export default React.createClass({
 
   showSearch: function() {
     this.setState({ showingModal: true })
-    Actions.search({ area: this.state.campus })
+    Actions.search({ area: this.props.campus })
   },
 
   setupBackButton: function() {
@@ -81,8 +80,11 @@ export default React.createClass({
 
   load: function() {
     const categories = ['faculty', 'building', 'school', 'department']
-    const query = categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR ')
-    return realm.objects('Place').filtered(query)
+    return realm.objects('Place')
+      .filtered(`_ancestorsId CONTAINS "${this.props.campus.id}"`)
+      .filtered(categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
+      .sorted('shortName')
+      .snapshot()
   },
 
   fetch: function() {
@@ -91,11 +93,11 @@ export default React.createClass({
       .then(areas => realm.write(() => {
         areas.forEach(area => realm.create('Place', area, true))
       }))
-      .then(() => this.forceUpdate())
+      .then(() => this.setState({ areas: this.load() }))
   },
 
   render: function() {
-    const campus = this.state.campus
+    const campus = this.props.campus
     const areas = R.toArray(this.state.areas)
     return (
       <View style={styles.container}>
@@ -153,7 +155,7 @@ export default React.createClass({
         return this.goToPoint(center)
       }
     }
-    this.goToPoint(this.state.campus.center)
+    this.goToPoint(this.props.campus.center)
   },
 
   selectArea: function(area) {

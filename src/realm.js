@@ -62,6 +62,7 @@ export class Place {
 
   get center() {
     const location = this.location
+    if (!location) return null
     switch (location.type) {
     case 'Point': return location
     case 'Polygon': return gju.centroid(location)
@@ -76,6 +77,12 @@ export class Place {
       latitude: coord[1],
       longitude: coord[0],
     }))
+  }
+
+  static compare(a, b) {
+    if (a.identifier < b.identifier) return -1
+    else if (a.identifier > b.identifier) return 1
+    else return 0
   }
 }
 

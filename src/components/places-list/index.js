@@ -1,7 +1,6 @@
 import React, { View, Text, Component, StyleSheet, ListView } from 'react-native'
 
 import Colors from '../../global/colors'
-import { Entity } from '../../models'
 import Cell from './cell'
 
 

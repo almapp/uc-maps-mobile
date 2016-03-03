@@ -1,8 +1,12 @@
 import React, { View, Text, Component, StyleSheet, ListView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
+import sortBy from 'sort-by'
 
-import { Entity, fetchChilds } from '../../models'
+import realm, { Place } from '../../realm'
+import { PlacesFetcher } from '../../fetcher'
+import * as R from '../../util/realm-patch'
+
 import Colors from '../../global/colors'
 import BaseModal from './base'
 import ModalCell from './cell'
@@ -12,7 +16,7 @@ export default class ServiceModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      services: this.props.services.map(s => Object.assign(s, { places: [] })),
+      services: this.loadServices(this.props.services),
     }
     this.fetch().done()
   }
@@ -39,37 +43,30 @@ export default class ServiceModal extends Component {
     }
   }
 
+  loadServices(services) {
+    return services.map(s => ({ ...s, places: this.load(s.categories) }))
+  }
+
+  load(categories) {
+    return realm.objects('Place')
+      .filtered(`_ancestorsId CONTAINS "${this.props.area.id}"`)
+      .filtered(categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
+      .sorted('identifier')
+      .snapshot()
+  }
+
   fetch() {
     // Flat categories
-    const services = this.props.services.reduce((total, current) => {
+    const categories = this.props.services.reduce((total, current) => {
       return current.categories.concat(total)
     }, [])
 
     // Perform only one request
-    return fetchChilds(this.props.area, ...services)
-      .then(places => {
-        // Create hash
-        const myMap = new Map()
-        places.forEach(place => {
-          place.categories.forEach(category => {
-            var array = myMap.get(category)
-            if (!array) array = []
-            array.push(place)
-            myMap.set(category, array)
-          })
-        })
-
-        // Remap to services with categories
-        this.state.services.forEach(service => {
-          service.places = []
-          service.categories.forEach(category => {
-            service.places.push(...(myMap.get(category) || []))
-          })
-        })
-
-        // Update view with fetched and sorted services
-        return this.setState({ services: this.state.services })
-      })
+    return PlacesFetcher.childs(this.props.area, { categories: categories })
+      .then(places => realm.write(() => {
+        places.forEach(place => realm.create('Place', place, true))
+      }))
+      .then(() => this.setState({ services: this.loadServices(this.props.services) }))
   }
 
   get datasource() {
@@ -77,35 +74,43 @@ export default class ServiceModal extends Component {
   }
 
   render() {
-    const services = this.state.services.filter(s => s.places.length > 0)
-    const datasource = this.datasource.cloneWithRows(services)
+    const services = this.state.services.sort((a, b) => {
+      if (a.places.length < b.places.length) return 1
+      if (a.places.length > b.places.length) return -1
+      else return 0
+    }) // .filter(s => s.places.length > 0)
 
     return (
       <BaseModal onClose={this.close.bind(this)}>
         <ListView
           style={styles.list}
-          dataSource={datasource}
-          renderRow={(service) => this.cell(service)}
+          dataSource={this.datasource.cloneWithRows(services)}
+          renderRow={service => this.cell(service)}
           />
       </BaseModal>
     )
   }
 
   cell(service) {
-    const enabled = service.places.length > 0
+    const length = service.places.length
+    const options = {
+      title: service.title,
+      subtitle: `Lugares: ${length ? length : '0 ?'}`,
+      enabled: length > 0,
+    }
     return (
-      <ModalCell title={service.title} subtitle={`Lugares: ${service.places.length}`} enabled={enabled} onSelection={this.onSelection.bind(this, service)} />
+      <ModalCell {...options} onSelection={this.onSelection.bind(this, service)} />
     )
   }
 
-  onSelection(service) {
+  onSelection(service = null) {
     Actions.dismiss()
     this.props.callback(service)
     return true
   }
 
   close() {
-    return this.onSelection(null)
+    return this.onSelection()
   }
 }
 

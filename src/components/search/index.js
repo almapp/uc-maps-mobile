@@ -16,10 +16,7 @@ export default class SearchView extends Component {
     super(props)
     this.state = {
       query: this.props.query || '',
-      area: this.props.area,
-      store: new Map(),
-      data: [],
-      found: this.props.found || [],
+      found: [],
     }
 
     if (Platform.OS !== 'ios') {
@@ -28,6 +25,23 @@ export default class SearchView extends Component {
 
     this.state.store.set(this.state.area._id, this.state.area)
     this.fetch().done()
+  }
+
+  static get defaultProps() {
+    return {
+      categories: null,
+      sorted: ['_categories', 'identifier'],
+      searchFields: ['name', 'shortName'],
+    }
+  }
+
+  search(text = null) {
+    let builder = realm.objects('Place')
+    if (this.props.area) builder = builder.filtered(`_ancestorsId CONTAINS "${this.props.area.id}"`)
+    if (this.props.categories) builder = builder.filtered(this.props.categories.map(cat => `_categories CONTAINS "${cat}"`).join(' OR '))
+    if (this.props.sorted) builder = builder.sorted(this.props.sorted)
+    if (text) builder = builder.filtered(this.props.searchFields.map(prop => `${prop} CONTAINS "${text}"`).join(' OR '))
+    return builder.snapshot()
   }
 
   fetch() {
