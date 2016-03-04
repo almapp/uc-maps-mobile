@@ -31,7 +31,6 @@ export default class Cell extends Component {
   element(place, enabled) {
     const style = { color: (enabled) ? 'black' : 'grey' }
     const location = place.location
-    const annotation = (location && location.floor) ? <Text style={styles.annotation}> |  Piso {location.floor}</Text> : undefined
     const ancestors = place.ancestorsId.map(id => {
       return realm.objects('Place')
         .filtered('id = $0', id)
@@ -44,7 +43,9 @@ export default class Cell extends Component {
         <Icon name={this.getIcon(ancestors)} size={25} style={styles.icon} />
 
         <Text style={[styles.title, style]}>
-          {place.display} {annotation}
+          {place.display} {renderIf(location && location.floor)(
+            <Text style={styles.annotation}> |  Piso {location.floor}</Text>
+          )}
         </Text>
 
         <Text style={[styles.detail, style]}>
