@@ -2,7 +2,6 @@ import React, { View, Text, Component, StyleSheet } from 'react-native'
 import { ListView } from 'realm/react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
-import sortBy from 'sort-by'
 
 import realm, { Place } from '../../realm'
 import { PlacesFetcher } from '../../fetcher'
