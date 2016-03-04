@@ -31,7 +31,22 @@ export default class SearchView extends Component {
   static get defaultProps() {
     return {
       query: '',
-      categories: null,
+      categories: [
+        'campus',
+        'faculty',
+        'building',
+        'other',
+        'classroom',
+        'auditorium',
+        'bank',
+        'computers',
+        'printer',
+        'photocopy',
+        'library',
+        'lab',
+        'study',
+        'food_lunch',
+      ],
       sorted: ['parentId', 'identifier'],
       searchFields: ['name', 'shortName'],
     }
@@ -47,7 +62,7 @@ export default class SearchView extends Component {
   }
 
   fetch() {
-    return PlacesFetcher.childs(this.props.area)
+    return PlacesFetcher.childs(this.props.area, { categories: this.props.categories })
       .then(places => realm.write(() => {
         places.forEach(place => realm.create('Place', place, true))
       }))
