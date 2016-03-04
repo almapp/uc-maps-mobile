@@ -5,10 +5,9 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import Toolbar from '../toolbar'
 import Colors from '../../global/colors'
-import { fetchChilds } from '../../models'
+
 
 export default class DetailView extends Component {
-
   render() {
     const place = this.props.place
     return (

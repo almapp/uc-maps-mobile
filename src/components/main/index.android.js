@@ -10,7 +10,6 @@ import Colors from '../../global/colors'
 
 
 export default class Main extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -36,10 +35,10 @@ export default class Main extends Component {
         </TabLayout>
 
         {renderIf(this.state.selected === 0)(
-          <CampusList /
+          <CampusList />
         )}
         {renderIf(this.state.selected === 1)(
-          <InformationView /
+          <InformationView />
         )}
 
       </View>

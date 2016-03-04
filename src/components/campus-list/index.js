@@ -1,37 +1,49 @@
-import React, { View, Text, Component, StyleSheet, Platform } from 'react-native'
+import React, { View, Component, StyleSheet } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Parallax from 'react-native-parallax'
 import Icon from 'react-native-vector-icons/Ionicons'
 
+import realm, { Place } from '../../realm'
+import { PlacesFetcher } from '../../fetcher'
+import * as R from '../../util/realm-patch'
+
 import Cell from './cell'
-import { fetchCampuses } from '../../models'
+
 
 export default class CampusList extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      campuses: [],
+      campuses: this.load(),
     }
     this.fetch().done()
   }
 
-  fetch() {
-    return fetchCampuses()
-      .then(campuses => this.setState({ campuses: campuses }))
+  load() {
+    return realm.objects('Place').filtered('_categories CONTAINS "campus"').snapshot()
   }
 
-  getImage(campus) {
+  fetch() {
+    return PlacesFetcher.campuses()
+      .then(places => realm.write(() => {
+        places.forEach(place => realm.create('Place', place, true))
+      }))
+      .then(() => this.setState({ campuses: this.load() }))
+  }
+
+  getCampusImage(campus) {
     return `https://almapp.github.io/uc-maps-assets/images/campuses/${campus.identifier}.jpg`
   }
 
   render() {
+    const campuses = R.toArray(this.state.campuses)
     return (
       <View style={[styles.container, this.props.style]}>
         <Parallax.ScrollView style={styles.scrollView}>
 
-          {this.state.campuses.map((campus, i) => (
-            <Cell key={i} campus={campus} image={this.getImage(campus)} onCampusSelect={this.selectCampus.bind(this, campus)}/>
+          {campuses.map((campus, i) => (
+            <Cell key={i} campus={campus} image={this.getCampusImage(campus)} onCampusSelect={this.selectCampus.bind(this, campus)}/>
           ))}
 
         </Parallax.ScrollView>

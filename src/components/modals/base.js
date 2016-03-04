@@ -1,4 +1,4 @@
-import React, { View, Text, Component, StyleSheet, TouchableHighlight, ListView, BackAndroid, Platform } from 'react-native'
+import React, { View, Text, Component, StyleSheet, TouchableHighlight, BackAndroid, Platform } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Button from 'react-native-button'
 import renderIf from '../../util/render-if'
@@ -17,9 +17,6 @@ export default class BaseModal extends Component {
   }
 
   render() {
-    const all = this.props.onAll ? this.allButton : undefined
-    const close = this.props.onClose ? this.closeButton : undefined
-
     return (
       <View style={[styles.container, this.props.style]}>
         <View style={[styles.content, styles.shadow]}>
@@ -128,5 +125,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
-  }
+  },
 })

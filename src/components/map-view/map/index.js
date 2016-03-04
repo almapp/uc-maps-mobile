@@ -4,15 +4,15 @@ import MapView from 'react-native-maps'
 
 import Colors from '../../../global/colors'
 
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0091;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const { width, height } = Dimensions.get('window')
+const ASPECT_RATIO = width / height
+const LATITUDE_DELTA = 0.0091
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 const DEFAULT_REGION = {
-  longitudeDelta: 0.09766039646630986,
   latitude: -33.45093681992992,
   longitude: -70.61507084839033,
+  longitudeDelta: 0.09766039646630986,
   latitudeDelta: 0.139540891650725,
 }
 
@@ -27,6 +27,7 @@ function parseGeoJSONPoint(json) {
 
 
 export default React.createClass({
+  displayName: 'EasyMap',
   mixins: [TimerMixin],
 
   getInitialState: function() {
@@ -44,8 +45,8 @@ export default React.createClass({
   },
 
   render: function() {
-    const polygons = this.props.areas.map(this.createPolygon).filter(p => p !== null)
-    const markers = this.props.places.map(this.createMarker).filter(p => p !== null)
+    const polygons = this.props.areas.map(this.createPolygon)
+    const markers = this.props.places.map(this.createMarker)
 
     if (this.props.places.length) {
       this.setTimeout(() => {
@@ -53,7 +54,7 @@ export default React.createClass({
           const reference = this.refs[this.props.places[0].identifier]
           if (reference) reference.showCallout()
         }
-      }, 700);
+      }, 700)
     }
 
     return (
@@ -63,7 +64,7 @@ export default React.createClass({
         initialRegion={this.state.initial}
         mapType={this.props.mapType}
         showsPointsOfInterest={false}
-        showsUserLocation={false}
+        showsUserLocation={true}
         onRegionChangeComplete={this.onRegionChangeComplete}
         >
 
