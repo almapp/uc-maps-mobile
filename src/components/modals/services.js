@@ -5,6 +5,7 @@ import Button from 'react-native-button'
 
 import realm, { Place } from '../../realm'
 import { PlacesFetcher } from '../../fetcher'
+import * as R from '../../util/realm-patch'
 
 import Colors from '../../global/colors'
 import BaseModal from './base'
@@ -43,7 +44,10 @@ export default class ServiceModal extends Component {
   }
 
   loadServices(services) {
-    return services.map(s => ({ ...s, places: this.load(s.categories) }))
+    return services.map(service => {
+      const places = R.toArray(this.load(service.categories))
+      return { ...service, places: places }
+    })
   }
 
   load(categories) {
