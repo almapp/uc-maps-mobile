@@ -33,7 +33,7 @@
   "dependencies": {
     "geojson-utils": "^1.1.0",
     "qs": "^6.1.0",
-    "react-native": "^0.20.0",
+    "react-native": "^0.21.0",
     "react-native-android-tablayout": "^0.2.0",
     "react-native-button": "^1.4.2",
     "react-native-maps": "^0.3.0",

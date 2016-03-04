@@ -1,13 +1,8 @@
 package com.almapp.ucmaps;
 
 import com.facebook.react.ReactActivity;
-import io.realm.react.RealmReactPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
-
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.AirMaps.AirPackage;
-import com.xebia.reactnative.TabLayoutPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,18 +27,14 @@ public class MainActivity extends ReactActivity {
         return BuildConfig.DEBUG;
     }
 
-   /**
-   * A list of packages used by the app. If the app uses additional views
-   * or modules besides the default ones, add more packages here.
-   */
+    /**
+     * A list of packages used by the app. If the app uses additional views
+     * or modules besides the default ones, add more packages here.
+     */
     @Override
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new RealmReactPackage(),
-            new VectorIconsPackage(),
-            new AirPackage(),
-            new TabLayoutPackage()
+            new MainReactPackage()
         );
     }
 }
