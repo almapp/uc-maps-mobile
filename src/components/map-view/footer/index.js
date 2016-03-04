@@ -1,4 +1,4 @@
-import React, { StyleSheet, Text, View, Component } from 'react-native'
+import React, { StyleSheet, Text, View, Component, TouchableHighlight } from 'react-native'
 import ViewPager from 'react-native-viewpager'
 import Button from 'react-native-button'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -18,6 +18,7 @@ export default class Footer extends Component {
     return {
       areas: [],
       loop: false,
+      buttons: [],
     }
   }
 
@@ -26,8 +27,10 @@ export default class Footer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.selected !== nextProps.selected) {
-      this.goToPage(nextProps.selected)
+    const number = Number(nextProps.selected)
+    if (number && this.state.selected !== number) {
+      this.setState({ selected: number })
+      // this.goToPage(number)
     }
   }
 
@@ -44,9 +47,30 @@ export default class Footer extends Component {
           dataSource={this.datasource.cloneWithPages(this.props.areas)}
           renderPage={this.renderPage.bind(this)}
           isLoop={this.props.loop}
-          onChangePage={this.selectArea.bind(this)}
+          onChangePage={this.onAreaSelection.bind(this)}
           autoPlay={false}/>
+
+        {this.renderButton('left')}
+        {this.renderButton('right')}
+
       </View>
+    )
+  }
+
+  renderButton(direction = 'left') {
+    return (
+      <TouchableHighlight
+        style={[styles.slide.arrow, { [direction]: 15 }]}
+        underlayColor="transparent"
+        onPress={this.moveToDirection.bind(this, direction)}
+        >
+        <Icon
+          name={`arrow-${direction}-b`}
+          size={24}
+          color={Colors.MAIN}
+          backgroundColor="transparent"
+          />
+      </TouchableHighlight>
     )
   }
 
@@ -58,12 +82,24 @@ export default class Footer extends Component {
         <Text style={styles.slide.detail}>a 10 minutos</Text>
 
         <View style={styles.slide.selector}>
-          <Button style={styles.slide.button} onPress={this.showDetails.bind(this, page)}>Detalles</Button>
-          <Button style={styles.slide.button} onPress={this.showClassrooms.bind(this, page)}>Salas</Button>
-          <Button style={styles.slide.button} onPress={this.showServices.bind(this, page)}>Servicios</Button>
+          {this.props.buttons.map((text, i) => (
+            <Button key={i} style={styles.slide.button} onPress={this.onButtonPress.bind(this, page, i)}>
+              {text}
+            </Button>
+          ))}
         </View>
+
       </View>
     )
+  }
+
+  moveToDirection(direction) {
+    const current = this.state.selected
+    const next = current + (direction === 'left' ? -1 : 1)
+    if (next >= 0 && next < this.props.areas.length) {
+      this.setState({ selected: next })
+      this.goToPage(next)
+    }
   }
 
   goToArea(area) {
@@ -74,19 +110,11 @@ export default class Footer extends Component {
     return this.refs.pager.goToPage(index)
   }
 
-  showDetails(index) {
-    if (this.props.onShowDetails) this.props.onShowDetails(this.props.areas[index])
+  onButtonPress(page, button) {
+    if (this.props.onButtonPress) this.props.onButtonPress(this.props.areas[page], button)
   }
 
-  showClassrooms(index) {
-    if (this.props.onShowClassrooms) this.props.onShowClassrooms(this.props.areas[index])
-  }
-
-  showServices(index) {
-    if (this.props.onShowServices) this.props.onShowServices(this.props.areas[index])
-  }
-
-  selectArea(index) {
+  onAreaSelection(index) {
     this.setState({ selected: index })
     if (this.props.onAreaSelection) this.props.onAreaSelection(this.props.areas[index])
   }
@@ -138,6 +166,23 @@ const styles = {
     },
     button: {
       color: Colors.COMPLEMENT,
+    },
+    arrow: {
+      position: 'absolute',
+      top: 21,
+      backgroundColor: 'transparent',
+    },
+    left: {
+      position: 'absolute',
+      left: 15,
+      top: 21,
+      backgroundColor: 'transparent',
+    },
+    right: {
+      position: 'absolute',
+      right: 15,
+      top: 21,
+      backgroundColor: 'transparent',
     },
   }),
 }

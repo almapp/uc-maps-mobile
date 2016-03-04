@@ -120,8 +120,16 @@ export default React.createClass({
           ref="footer"
           style={styles.footer}
           areas={areas}
+          buttons={['Detalle', 'Salas', 'Servicios']}
           onAreaSelection={this.goToPlace}
-          onShowClassrooms={this.showClassrooms}
+          onButtonPress={(area, index) => {
+            switch (index) {
+            case 0: return this.showDetails(area)
+            case 1: return this.showClassrooms(area)
+            case 2: return this.showServices(area)
+            default: return null
+            }
+          }}
           onShowServices={this.showServices}
           onShowDetails={this.showDetails}
           />
