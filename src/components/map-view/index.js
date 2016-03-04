@@ -20,10 +20,14 @@ export default React.createClass({
 
   getInitialState: function() {
     return {
-      areas: this.load(),
-      places: this.props.places || [],
+      areas: this.props.areas || this.load(),
+      places: this.props.places,
       showingModal: false,
     }
+  },
+
+  getDefaultProps: function() {
+    return { areas: [], places: [] }
   },
 
   componentDidMount: function() {
@@ -32,7 +36,6 @@ export default React.createClass({
       this.setState({ places: found, showingModal: false })
       if (found.length) {
         this.goToPlace(found[0])
-        // this.refs.footer.scrollToIndex(2)
       }
     })
 
@@ -118,7 +121,7 @@ export default React.createClass({
           ref="footer"
           style={styles.footer}
           areas={areas}
-          onAreaSelection={this.selectArea}
+          onAreaSelection={this.goToPlace}
           onShowClassrooms={this.showClassrooms}
           onShowServices={this.showServices}
           onShowDetails={this.showDetails}
@@ -140,26 +143,21 @@ export default React.createClass({
 
   // GeoJSON point
   goToPoint: function(point) {
-    this.goToCoordinates({
-      latitude: point.coordinates[1],
-      longitude: point.coordinates[0],
-    })
+    if (point && point.coordinates && point.coordinates[0] && point.coordinates[1]) {
+      this.goToCoordinates({
+        latitude: point.coordinates[1],
+        longitude: point.coordinates[0],
+      })
+      return true
+    }
+    return false
   },
 
   // API Entity
   goToPlace: function(place) {
-    // TODO: improve conditions
-    if (place && place.location && place.location.coordinates) {
-      const center = place.center
-      if (center && center.coordinates && center.coordinates[0] && center.coordinates[1]) {
-        return this.goToPoint(center)
-      }
+    if (!this.goToPoint(place.center)) {
+      this.goToPoint(this.props.campus.center)
     }
-    this.goToPoint(this.props.campus.center)
-  },
-
-  selectArea: function(area) {
-    this.goToPlace(area)
   },
 
   showDetails: function(area) {
@@ -169,8 +167,12 @@ export default React.createClass({
   showClassrooms: function(area) {
     // Pass callback to update view
     const callback = (places) => {
-      this.setState({ places: places, showingModal: false })
-      if (places.length) this.goToPlace(places[0])
+      if (places.length) {
+        this.setState({ places: places, showingModal: false })
+        this.goToPlace(places[0])
+      } else {
+        this.setState({ showingModal: false })
+      }
     }
     this.setState({ showingModal: true })
     Actions.classrooms({ area: area, callback: callback })
@@ -180,8 +182,12 @@ export default React.createClass({
     // Pass callback to update view
     const callback = (service) => {
       const places = service ? service.places : []
-      this.setState({ places: places, showingModal: false })
-      if (places.length) this.goToPlace(places[0])
+      if (places.length) {
+        this.setState({ places: places, showingModal: false })
+        this.goToPlace(places[0])
+      } else {
+        this.setState({ showingModal: false })
+      }
     }
     this.setState({ showingModal: true })
     Actions.services({ area: area, callback: callback })
@@ -209,6 +215,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowRadius: 1,
+    shadowColor: 'black',
+    shadowOpacity: 0.7,
+    elevation: 20,
   },
 })

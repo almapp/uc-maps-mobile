@@ -25,123 +25,115 @@ export default class Footer extends Component {
     return new ViewPager.DataSource({ pageHasChanged: (p1, p2) => p1.identifier !== p2.identifier })
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.selected !== nextProps.selected) {
+      this.goToPage(nextProps.selected)
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.areas && nextProps.areas.length !== this.props.areas.length
+  }
+
   render() {
-    const datasource = this.datasource.cloneWithPages(this.props.areas)
-
     return (
-      <View style={styles.view.container}>
-
+      <View style={[styles.view.container, this.props.style]}>
         <ViewPager
           ref="pager"
           style={styles.swiper.container}
-          dataSource={datasource}
+          dataSource={this.datasource.cloneWithPages(this.props.areas)}
           renderPage={this.renderPage.bind(this)}
           isLoop={this.props.loop}
           onChangePage={this.selectArea.bind(this)}
           autoPlay={false}/>
-
-    </View>
+      </View>
     )
   }
 
   renderPage(area, page) {
     return (
-      <View style={styles.swiper.slide}>
-        <View style={styles.swiper.texts}>
-          <Text style={styles.swiper.title} numberOfLines={2}>{area.shortName}</Text>
-          <Text style={styles.swiper.detail}>a 10 minutos</Text>
-        </View>
+      <View style={styles.slide.container}>
 
-        <View style={styles.swiper.selector}>
-          <Button style={styles.swiper.button} onPress={this.showDetails.bind(this)}>Detalles</Button>
-          <Button style={styles.swiper.button} onPress={this.showClassrooms.bind(this)}>Salas</Button>
-          <Button style={styles.swiper.button} onPress={this.showServices.bind(this)}>Servicios</Button>
+        <Text style={styles.slide.title} numberOfLines={2}>{area.name || area.shortName}</Text>
+        <Text style={styles.slide.detail}>a 10 minutos</Text>
+
+        <View style={styles.slide.selector}>
+          <Button style={styles.slide.button} onPress={this.showDetails.bind(this, page)}>Detalles</Button>
+          <Button style={styles.slide.button} onPress={this.showClassrooms.bind(this, page)}>Salas</Button>
+          <Button style={styles.slide.button} onPress={this.showServices.bind(this, page)}>Servicios</Button>
         </View>
       </View>
     )
   }
 
-  scrollToArea(area) {
-    this.scrollToIndex(this.props.areas.indexOf(area))
+  goToArea(area) {
+    this.goToPage(this.props.areas.map(a => a.id).indexOf(area.id))
   }
 
-  scrollToIndex(index) {
-    this.refs.pager.goToPage(index)
+  goToPage(index) {
+    return this.refs.pager.goToPage(index)
   }
 
-  showDetails() {
-    const index = this.state.selected
+  showDetails(index) {
     if (this.props.onShowDetails) this.props.onShowDetails(this.props.areas[index])
   }
 
-  showClassrooms() {
-    const index = this.state.selected
+  showClassrooms(index) {
     if (this.props.onShowClassrooms) this.props.onShowClassrooms(this.props.areas[index])
   }
 
-  showServices() {
-    const index = this.state.selected
+  showServices(index) {
     if (this.props.onShowServices) this.props.onShowServices(this.props.areas[index])
   }
 
   selectArea(index) {
-    this.setState({
-      selected: index,
-    })
+    this.setState({ selected: index })
     if (this.props.onAreaSelection) this.props.onAreaSelection(this.props.areas[index])
   }
 }
 
 const SIDE_MARGIN = 40
+const HEIGHT = 140
 
 const styles = {
   view: StyleSheet.create({
     container: {
-      paddingBottom: 4,
       backgroundColor: 'white',
-      shadowOffset: {
-        width: 0,
-        height: -2,
-      },
-      shadowRadius: 1,
-      shadowColor: 'black',
-      shadowOpacity: 0.7,
-      elevation: 20,
+      paddingBottom: 7,
     },
   }),
 
   swiper: StyleSheet.create({
     container: {
-      height: 420,
+      height: HEIGHT,
     },
-    slide: {
+  }),
+
+  slide: StyleSheet.create({
+    container: {
       flex: 1,
+      height: HEIGHT,
+      paddingTop: 12,
+      paddingRight: SIDE_MARGIN,
+      paddingBottom: 30,
+      paddingLeft: SIDE_MARGIN,
       flexDirection: 'column',
-      backgroundColor: 'white',
       justifyContent: 'space-between',
-    },
-    texts: {
-      height: 75,
+      backgroundColor: 'white',
     },
     title: {
       fontSize: 19,
       fontWeight: '500',
-      marginLeft: SIDE_MARGIN,
-      marginTop: 12,
-      marginRight: SIDE_MARGIN,
     },
     detail: {
-      marginLeft: SIDE_MARGIN,
+      flex: 1,
       marginTop: 3,
       fontWeight: '200',
     },
     selector: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 30,
-      marginTop: 15,
-      marginLeft: SIDE_MARGIN,
-      marginRight: SIDE_MARGIN,
+      marginTop: 14,
       justifyContent: 'space-between',
     },
     button: {
