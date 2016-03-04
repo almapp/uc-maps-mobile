@@ -60,7 +60,7 @@ export default class Footer extends Component {
   renderButton(direction = 'left') {
     return (
       <TouchableHighlight
-        style={[styles.slide.arrow, { [direction]: 15 }]}
+        style={[styles.slide.arrow, { [direction]: 0 }]}
         underlayColor="transparent"
         onPress={this.moveToDirection.bind(this, direction)}
         >
@@ -168,20 +168,12 @@ const styles = {
       color: Colors.COMPLEMENT,
     },
     arrow: {
+      width: SIDE_MARGIN,
+      height: SIDE_MARGIN,
       position: 'absolute',
-      top: 21,
-      backgroundColor: 'transparent',
-    },
-    left: {
-      position: 'absolute',
-      left: 15,
-      top: 21,
-      backgroundColor: 'transparent',
-    },
-    right: {
-      position: 'absolute',
-      right: 15,
-      top: 21,
+      top: 15,
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: 'transparent',
     },
   }),
