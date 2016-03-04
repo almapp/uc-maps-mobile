@@ -2,6 +2,7 @@ import React, { StyleSheet, Text, View, Component, TouchableHighlight } from 're
 import ViewPager from 'react-native-viewpager'
 import Button from 'react-native-button'
 import Icon from 'react-native-vector-icons/Ionicons'
+import renderIf from '../../../util/render-if'
 
 import Colors from '../../../global/colors'
 
@@ -50,8 +51,8 @@ export default class Footer extends Component {
           onChangePage={this.onAreaSelection.bind(this)}
           autoPlay={false}/>
 
-        {this.renderButton('left')}
-        {this.renderButton('right')}
+        {renderIf(this.props.areas.length > 1)(this.renderButton('left'))}
+        {renderIf(this.props.areas.length > 1)(this.renderButton('right'))}
 
       </View>
     )
