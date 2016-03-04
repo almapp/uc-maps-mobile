@@ -46,5 +46,8 @@
     "react-native-viewpager": "^0.2.1",
     "react-timer-mixin": "^0.13.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^2.2.0",
+    "eslint-plugin-react": "^4.1.0"
+  }
 }
