@@ -6,7 +6,6 @@ import renderIf from '../../util/render-if'
 
 import EasyMap from './map'
 import Footer from './footer'
-import Header from './header'
 import Toolbar from '../toolbar'
 import Colors from '../../global/colors'
 
@@ -201,15 +200,6 @@ export default React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    position: 'absolute',
-    top: 20,
-    left: 0,
-    right: 0,
-    margin: 10,
-    height: 44,
-    // maxWidth: 320,
   },
   maps: {
     flex: 1,
