@@ -2,27 +2,16 @@ import React, { StyleSheet, Text, View, Component, Dimensions, Platform, StatusB
 import TimerMixin from 'react-timer-mixin'
 import MapView from 'react-native-maps'
 
+import * as helper from './helper'
 import Colors from '../../../global/colors'
-
-const { width, height } = Dimensions.get('window')
-const ASPECT_RATIO = width / height
-const LATITUDE_DELTA = 0.0091
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+import Polygon from './polygon'
+import Marker from './marker'
 
 const DEFAULT_REGION = {
   latitude: -33.45093681992992,
   longitude: -70.61507084839033,
   longitudeDelta: 0.09766039646630986,
   latitudeDelta: 0.139540891650725,
-}
-
-function parseGeoJSONPoint(json) {
-  return {
-    latitude: json.coordinates[1],
-    longitude: json.coordinates[0],
-    longitudeDelta: LONGITUDE_DELTA,
-    latitudeDelta: LATITUDE_DELTA,
-  }
 }
 
 
@@ -32,7 +21,7 @@ export default React.createClass({
 
   getInitialState: function() {
     return {
-      initial: (this.props.initial) ? parseGeoJSONPoint(this.props.initial.center) : DEFAULT_REGION,
+      initial: (this.props.initial) ? helper.parse(this.props.initial.center) : DEFAULT_REGION,
     }
   },
 
@@ -45,22 +34,22 @@ export default React.createClass({
   },
 
   render: function() {
-    const polygons = this.props.areas.map(this.createPolygon)
-    const markers = this.props.places.map(this.createMarker)
+    // if (this.props.places.length) {
+    //   this.setTimeout(() => {
+    //     if (this.props.places.length && this.props.places[0].identifier) {
+    //       const reference = this.refs[this.props.places[0].identifier]
+    //       if (reference) reference.showCallout()
+    //     }
+    //   }, 700)
+    // }
 
-    if (this.props.places.length) {
-      this.setTimeout(() => {
-        if (this.props.places.length && this.props.places[0].identifier) {
-          const reference = this.refs[this.props.places[0].identifier]
-          if (reference) reference.showCallout()
-        }
-      }, 700)
-    }
+    // Marker icon for areas
+    const dot = require('./img/dot.png')
 
     return (
       <MapView
         ref="maps"
-        style={styles.maps}
+        style={[styles.maps, this.props.style]}
         initialRegion={this.state.initial}
         mapType={this.props.mapType}
         showsPointsOfInterest={false}
@@ -68,49 +57,44 @@ export default React.createClass({
         onRegionChangeComplete={this.onRegionChangeComplete}
         >
 
-        {polygons}
-        {markers}
+        {this.props.areas.map((area, i) => (
+          <Polygon key={i} place={area} />
+        ))}
+        {this.props.areas.map(area => (
+          <Marker ref={area.identifier} key={area.identifier} place={area} image={dot} onPress={coords => this.onAreaSelection(area)} />
+        ))}
+        {this.props.places.map(place => (
+          <Marker ref={place.identifier} key={place.identifier} place={place} onPress={coords => this.onPlaceSelection(place)} />
+        ))}
 
       </MapView>
     )
   },
 
-  createMarker: function(place, index) {
-    const coordinate = parseGeoJSONPoint(place.center)
-    const description = place.location && place.location.floor ? `Piso: ${place.location.floor}` : undefined
-    return (
-      <MapView.Marker
-        ref={place.identifier}
-        key={place.identifier}
-        coordinate={coordinate}
-        title={place.shortName || place.name}
-        description={description}
-        pinColor={Colors.HIGH_CONTRAST}
-        />
-    )
+  onAreaSelection: function(area) {
+    if (this.props.onAreaSelection) this.props.onAreaSelection(area)
   },
 
-  createPolygon: function(place, index) {
-    const polygon = place.polygon
-    if (!polygon) return null
-
-    return (
-      <MapView.Polygon
-        key={place.identifier}
-        coordinates={polygon}
-        fillColor={Colors.CONTRAST}
-        strokeColor="rgba(0,0,0,0.5)"
-        strokeWidth={1}
-      />
-    )
-  },
-
-  animateToCoordinates: function(region) {
-    this.refs.maps.animateToCoordinate(region)
+  onPlaceSelection: function(place) {
+    if (this.props.onPlaceSelection) this.props.onPlaceSelection(place)
   },
 
   onRegionChangeComplete: function(region) {
     // console.log(region)
+  },
+
+  showCallout(place) {
+    const marker = this.refs[place.identifier]
+    if (marker) marker.showCallout()
+  },
+
+  hideCallout(place) {
+    const marker = this.refs[place.identifier]
+    if (marker) marker.hideCallout()
+  },
+
+  animateToCoordinates: function(region) {
+    this.refs.maps.animateToCoordinate(region)
   },
 })
 

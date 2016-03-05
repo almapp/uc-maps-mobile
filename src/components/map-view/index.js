@@ -114,6 +114,7 @@ export default React.createClass({
           initial={campus}
           areas={areas}
           places={this.state.places}
+          onAreaSelection={area => this.refs.footer.goToArea(area)}
           />
 
         <Footer
@@ -121,7 +122,7 @@ export default React.createClass({
           style={styles.footer}
           areas={areas}
           buttons={['Detalle', 'Salas', 'Servicios']}
-          onAreaSelection={this.goToPlace}
+          onAreaSelection={area => this.goToPlace(area, true)}
           onButtonPress={(area, index) => {
             switch (index) {
             case 0: return this.showDetails(area)
@@ -138,32 +139,40 @@ export default React.createClass({
     )
   },
 
+  onAreaSelection: function(area) {
+    this.refs.footer.goToArea(area)
+  },
+
   goBack: function() {
     if (!this.state.showingModal) Actions.pop()
     return true
   },
 
   // Map point
-  goToCoordinates: function(coordinates) {
-    this.refs.maps.animateToCoordinates(coordinates)
+  goToCoordinates: function(coordinates, duration = 500) {
+    this.refs.maps.animateToCoordinates(coordinates, duration)
   },
 
   // GeoJSON point
-  goToPoint: function(point) {
+  goToPoint: function(point, duration) {
     if (point && point.coordinates && point.coordinates[0] && point.coordinates[1]) {
       this.goToCoordinates({
         latitude: point.coordinates[1],
         longitude: point.coordinates[0],
-      })
+      }, duration)
       return true
     }
     return false
   },
 
   // API Entity
-  goToPlace: function(place) {
-    if (!this.goToPoint(place.center)) {
-      this.goToPoint(this.props.campus.center)
+  goToPlace: function(place, showCallout = false, duration = 500, delay = 30) {
+    const success = this.goToPoint(place.center, duration)
+    if (success && this.calloutTimer) {
+      this.clearTimeout(this.calloutTimer)
+    }
+    if (success && showCallout) {
+      this.calloutTimer = this.setTimeout(() => this.refs.maps.showCallout(place), duration + delay)
     }
   },
 

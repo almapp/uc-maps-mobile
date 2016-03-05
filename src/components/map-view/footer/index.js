@@ -30,13 +30,13 @@ export default class Footer extends Component {
   componentWillReceiveProps(nextProps) {
     const number = Number(nextProps.selected)
     if (number && this.state.selected !== number) {
-      this.setState({ selected: number })
-      // this.goToPage(number)
+      // this.setState({ selected: number })
+      this.goToPage(number)
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.areas && nextProps.areas.length !== this.props.areas.length
+    return nextProps.areas.length !== this.props.areas.length
   }
 
   render() {
@@ -98,16 +98,17 @@ export default class Footer extends Component {
     const current = this.state.selected
     const next = current + (direction === 'left' ? -1 : 1)
     if (next >= 0 && next < this.props.areas.length) {
-      this.setState({ selected: next })
+      // this.setState({ selected: next })
       this.goToPage(next)
     }
   }
 
   goToArea(area) {
-    this.goToPage(this.props.areas.map(a => a.id).indexOf(area.id))
+    return this.goToPage(this.props.areas.map(a => a.id).indexOf(area.id))
   }
 
   goToPage(index) {
+    this.setState({ selected: index }) // Won't re-render
     return this.refs.pager.goToPage(index)
   }
 
@@ -117,7 +118,7 @@ export default class Footer extends Component {
 
   onAreaSelection(index) {
     this.setState({ selected: index })
-    if (this.props.onAreaSelection) this.props.onAreaSelection(this.props.areas[index])
+    if (this.props.onAreaSelection) this.props.onAreaSelection(this.props.areas[index], index)
   }
 }
 
