@@ -1,6 +1,6 @@
 import React, { View, Component, StyleSheet } from 'react-native'
+import { ListView } from 'realm/react-native'
 import { Actions } from 'react-native-router-flux'
-import Parallax from 'react-native-parallax'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import realm, { Place } from '../../realm'
@@ -32,27 +32,26 @@ export default class CampusList extends Component {
       .then(() => this.setState({ campuses: this.load() }))
   }
 
-  getCampusImage(campus) {
-    return `https://almapp.github.io/uc-maps-assets/images/campuses/${campus.identifier}.jpg`
+  get datasource() {
+    return new ListView.DataSource({ rowHasChanged: (r1, r2) => r1.identifier !== r2.identifier })
   }
 
   render() {
     const campuses = R.toArray(this.state.campuses)
     return (
-      <View style={[styles.container, this.props.style]}>
-        <Parallax.ScrollView style={styles.scrollView}>
-
-          {campuses.map((campus, i) => (
-            <Cell key={i} campus={campus} image={this.getCampusImage(campus)} onCampusSelect={this.selectCampus.bind(this, campus)}/>
-          ))}
-
-        </Parallax.ScrollView>
-      </View>
+      <ListView
+        style={[styles.container, this.props.style]}
+        keyboardDismissMode="interactive"
+        showsVerticalScrollIndicator={false}
+        dataSource={this.datasource.cloneWithRows(this.state.campuses)}
+        renderRow={(campus, i) => <Cell key={i} campus={campus} onPress={this.selectCampus.bind(this)}/>}
+        renderSeparator={(section, row) => <View key={row} style={styles.separator}></View>}
+        />
     )
   }
 
   selectCampus(campus) {
-    Actions.maps({ campus: campus })
+    Actions.maps({ campus: campus, title: campus.display })
   }
 }
 

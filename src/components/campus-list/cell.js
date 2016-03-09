@@ -1,31 +1,34 @@
-import React, { Text, StyleSheet } from 'react-native'
-import Parallax from 'react-native-parallax'
+import React, { View, Text, Image, StyleSheet, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 
-export default function Cell(props) {
-  const campus = props.campus
+export default function Cell({ campus, ...props}) {
   return (
-    <Parallax.Image
-      onPress={props.onCampusSelect}
-      style={styles.image}
-      overlayStyle={styles.overlay}
-      source={{uri: props.image}}>
-
-      <Text numberOfLines={2} style={[styles.name, styles.text]}>{campus.name}</Text>
-      <Text numberOfLines={2} style={[styles.address, styles.text]}>{campus.address}</Text>
-      <Icon name="chevron-right" style={styles.disclosure} />
-
-    </Parallax.Image>
+    <TouchableHighlight style={[styles.container, props.style]} onPress={() => props.onPress && props.onPress(campus)} underlayColor="rgba(0,0,0,0.8)">
+      <Image style={[styles.content, styles.image]} source={{uri: getCampusImage(campus)}}>
+        <View style={styles.overlay}>
+          <Text numberOfLines={2} style={[styles.text, styles.name]}>{campus.name}</Text>
+          <Text numberOfLines={2} style={[styles.text, styles.address]}>{campus.address}</Text>
+          <Icon name="chevron-right" style={styles.disclosure} />
+        </View>
+      </Image>
+    </TouchableHighlight>
   )
 }
 
+function getCampusImage(campus) {
+  return `https://almapp.github.io/uc-maps-assets/images/campuses/${campus.identifier}.jpg`
+}
+
 const styles = StyleSheet.create({
-  image: {
+  container: {
     height: 100,
-    // marginTop: 5,
-    // marginLeft: 5,
-    // marginRight: 5,
+  },
+  content: {
+    flex: 1,
+  },
+  image: {
+
   },
   overlay: {
     flex: 1,
