@@ -1,4 +1,4 @@
-import React, { View, Component, StyleSheet } from 'react-native'
+import React, { View, Component, StyleSheet, RefreshControl } from 'react-native'
 import { ListView } from 'realm/react-native'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -16,6 +16,7 @@ export default class CampusList extends Component {
 
     this.state = {
       campuses: this.load(),
+      refreshing: false,
     }
     this.fetch().done()
   }
@@ -29,7 +30,10 @@ export default class CampusList extends Component {
       .then(places => realm.write(() => {
         places.forEach(place => realm.create('Place', place, true))
       }))
-      .then(() => this.setState({ campuses: this.load() }))
+      .then(() => this.setState({ campuses: this.load(), refreshing: false }))
+      .catch(err => {
+        this.setState({ refreshing: false })
+      })
   }
 
   get datasource() {
@@ -46,8 +50,24 @@ export default class CampusList extends Component {
         dataSource={this.datasource.cloneWithRows(this.state.campuses)}
         renderRow={(campus, i) => <Cell key={i} campus={campus} onPress={this.selectCampus.bind(this)}/>}
         renderSeparator={(section, row) => <View key={row} style={styles.separator}></View>}
+        refreshControl={this.refreshControl()}
         />
     )
+  }
+
+  refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh.bind(this)}
+        title="Cargando..."
+      />
+    )
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true })
+    return this.fetch()
   }
 
   selectCampus(campus) {
