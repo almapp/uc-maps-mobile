@@ -34,11 +34,11 @@ export default class InformationView extends Component {
           </Section>
         </TableView>
       </ScrollView>
-    );
+    )
   }
 
   goToURL(url) {
-    Linking.openURL(url)
+    return Linking.openURL(url)
       .catch(err => console.error('An error occurred', err))
   }
 }

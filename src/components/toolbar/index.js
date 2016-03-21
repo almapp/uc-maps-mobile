@@ -11,7 +11,6 @@ export default function Toolbar(props) {
     <ToolbarAndroid
       style={styles.toolbar}
       titleColor="white"
-      navIcon={icon}
       actions={props.search ? [
         {title: 'Buscar', show: 'always'},
       ] : []}

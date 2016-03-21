@@ -64,9 +64,12 @@ export default class SearchView extends Component {
   fetch() {
     return PlacesFetcher.childs(this.props.area, { categories: this.props.categories })
       .then(places => realm.write(() => {
-        places.forEach(place => realm.create('Place', place, true))
+        InteractionManager.runAfterInteractions(() => {
+          places.forEach(place => realm.create('Place', place, true))
+          this.setState({ found: this.search(this.state.query) })
+        })
       }))
-      .then(() => this.setState({ found: this.search(this.state.query) }))
+      //.then(() => this.setState({ found: this.search(this.state.query) }))
   }
 
   placeholder(area) {

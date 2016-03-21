@@ -56,6 +56,16 @@ export class Place {
     return this._location ? JSON.parse(this._location) : null
   }
 
+  get contact() {
+    const source = this._contact
+    return {
+      social: source.social ? JSON.parse(source.social) : [],
+      urls: source.urls ? JSON.parse(source.urls) : [],
+      emails: source.emails ? JSON.parse(source.emails) : [],
+      phones: source.phones ? JSON.parse(source.phones) : [],
+    }
+  }
+
   get display() {
     return this.shortName || this.name || this.identifier
   }

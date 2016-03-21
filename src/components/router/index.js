@@ -46,8 +46,8 @@ export default class AppRouter extends Component {
         <Schema name="default" sceneConfig={isAndroid ? Navigator.SceneConfigs.FadeAndroid : noSwipe.FloatFromRight} />
         <Schema name="withoutAnimation"/>
 
-        <Route name="main" schema="default" title="Mapas UC" component={Main} initial={true} />
-        <Route name="detail" schema="default" title="Detalle" component={DetailView} />
+        <Route name="main" schema="default" title="Mapas UC" component={Main} />
+        <Route name="detail" schema="default" title="Detalle" component={DetailView} initial={true} />
         <Route name="search" schema="modal" title="Buscar" component={SearchView} searchEventEmitter={this.props.searchEventEmitter}/>
         <Route name="maps" schema="default" title="Mapa" component={MapsView} leftTitle={" "} {...search} />
 
